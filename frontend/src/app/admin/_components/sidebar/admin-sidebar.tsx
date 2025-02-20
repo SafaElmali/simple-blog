@@ -61,15 +61,15 @@ const AdminSidebar = () => {
                 <SidebarMenuItem key={item.title}>
                   {item.hasSubmenu ? (
                     <Collapsible className="p-2">
-                      <CollapsibleTrigger className="flex w-full items-center">
+                      <CollapsibleTrigger className="flex w-full items-center gap-2">
                         <item.icon className="h-4 w-4" />
                         <span>{item.title}</span>
                         <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
                       </CollapsibleTrigger>
                       <CollapsibleContent className="mt-2">
                         {item.items?.map((subItem) => (
-                          <SidebarMenuButton key={subItem.title} asChild className="gap-2">
-                            <Link href={subItem.url} className="pl-4">
+                          <SidebarMenuButton key={subItem.title} asChild>
+                            <Link href={subItem.url} className="pl-8">
                               <span>{subItem.title}</span>
                             </Link>
                           </SidebarMenuButton>
