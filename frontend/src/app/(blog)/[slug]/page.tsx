@@ -1,15 +1,19 @@
 "use client";
 
-import { useParams } from "next/navigation";
-import { usePostBySlugQuery } from "@/queries/posts";
-import { notFound } from "next/navigation";
-import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
+import { FC, use } from "react";
 import { format } from "date-fns";
+import { notFound } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useGetPostBySlug } from "@/queries/posts";
+import Image from "next/image";
 
-const BlogPostPage = () => {
-  const params = useParams();
-  const { data: post, isLoading, isError } = usePostBySlugQuery(params.slug as string);
+type BlogPostPageProps = {
+  params: Promise<{ slug: string }>;
+};
+
+const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
+  const { slug } = use(params);
+  const { data: post, isLoading, isError } = useGetPostBySlug(slug);
 
   if (isError || (!isLoading && !post)) {
     notFound();

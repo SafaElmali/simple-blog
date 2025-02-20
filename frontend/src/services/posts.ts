@@ -1,8 +1,5 @@
-import { Post } from "@/types/post";
+import { CreatePost, Post, UpdatePost } from "@/types/post";
 import { axiosInstance } from "@/lib/axios";
-
-export type CreatePostData = Omit<Post, "_id" | "createdAt" | "updatedAt">;
-export type UpdatePostData = Partial<CreatePostData>;
 
 const ENDPOINTS = {
   POSTS: "/api/posts",
@@ -31,7 +28,7 @@ export const postsApi = {
     }
   },
 
-  getBySlug: async (slug: string): Promise<Post | null | null> => {
+  getBySlug: async (slug?: string): Promise<Post | null> => {
     if (!slug) return null;
 
     try {
@@ -45,7 +42,7 @@ export const postsApi = {
     }
   },
 
-  create: async (postData: CreatePostData): Promise<Post> => {
+  create: async (postData: CreatePost): Promise<Post> => {
     try {
       const { data } = await axiosInstance.post<Post>(
         ENDPOINTS.POSTS,
@@ -58,7 +55,7 @@ export const postsApi = {
     }
   },
 
-  update: async (id: string, postData: UpdatePostData): Promise<Post> => {
+  update: async (id: string, postData: UpdatePost): Promise<Post> => {
     try {
       const { data } = await axiosInstance.put<Post>(
         ENDPOINTS.POST_BY_ID(id),

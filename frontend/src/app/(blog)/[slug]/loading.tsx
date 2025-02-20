@@ -1,6 +1,7 @@
-import { PostContent } from "../_components/post/post-content";
+import { PostSkeleton } from "@/app/(blog)/_components/post/post-skeleton";
 
-export default function PostLoading() {
-  // The PostContent component handles its own loading state
-  return <PostContent slug="" />;
-} 
+const PostLoading = () => {
+  return <PostSkeleton />;
+};
+
+export default PostLoading;

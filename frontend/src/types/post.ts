@@ -10,3 +10,6 @@ export type Post = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type CreatePost = Omit<Post, "_id" | "createdAt" | "updatedAt">;
+export type UpdatePost = Partial<CreatePost>;

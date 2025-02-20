@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function PostNotFound() {
+const PostNotFound = () => {
   return (
     <div className="container max-w-4xl py-20">
       <div className="text-center">
@@ -15,4 +15,6 @@ export default function PostNotFound() {
       </div>
     </div>
   );
-} 
+};
+
+export default PostNotFound;
