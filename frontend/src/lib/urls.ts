@@ -1,20 +1,36 @@
-const ADMIN_ROOT = "/admin" as const;
-const ADMIN_DASHBOARD = `${ADMIN_ROOT}/dashboard` as const;
+const ADMIN_ROOT = "/admin";
+const ADMIN_DASHBOARD = `${ADMIN_ROOT}/dashboard`;
 
-export const urls = {
-  admin: {
-    root: ADMIN_ROOT,
-    login: `${ADMIN_ROOT}/login`,
-    dashboard: {
-      root: ADMIN_DASHBOARD,
-      posts: {
-        root: `${ADMIN_DASHBOARD}/posts`,
-        new: `${ADMIN_DASHBOARD}/posts/new`,
-        edit: (id: string) => `${ADMIN_DASHBOARD}/posts/${id}`,
-      },
-      settings: `${ADMIN_DASHBOARD}/settings`,
-    },
-  },
-} as const;
+export class UrlUtil {
+  static buildAdminPath() {
+    return `${ADMIN_ROOT}`;
+  }
 
-export type Urls = typeof urls; 
+  static buildAdminDashboardPath() {
+    return `${ADMIN_DASHBOARD}`;
+  }
+
+  static buildAdminLoginPath() {
+    return `${ADMIN_ROOT}/login`;
+  }
+
+  static buildAdminRegisterPath() {
+    return `${ADMIN_ROOT}/register`;
+  }
+
+  static buildAdminPostsPath() {
+    return `${ADMIN_DASHBOARD}/posts`;
+  }
+
+  static buildAdminPostsNewPath() {
+    return `${ADMIN_DASHBOARD}/posts/new`;
+  }
+
+  static buildAdminPostPath(id: string) {
+    return `${ADMIN_DASHBOARD}/posts/${id}`;
+  }
+
+  static buildAdminSettingsPath() {
+    return `${ADMIN_DASHBOARD}/settings`;
+  }
+}

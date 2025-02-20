@@ -1,33 +1,26 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { isValidJWT } from '@/lib/jwt';
-
-// Define public routes that don't require authentication
-const publicRoutes = ['/admin/login'];
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { UrlUtil } from "@/lib/urls";
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value;
-  const { pathname } = request.nextUrl;
+  const token = request.cookies.get("token");
+  const isAuthPage = request.nextUrl.pathname === UrlUtil.buildAdminLoginPath();
 
-  // Check if the current path is a public route
-  const isPublicRoute = publicRoutes.some(route => pathname === route);
-
-  // If it's a public route (like login) and user is authenticated, redirect to admin dashboard
-  if (isPublicRoute && token && isValidJWT(token)) {
-    return NextResponse.redirect(new URL('/admin/(dashboard)', request.url));
+  if (!token && !isAuthPage) {
+    return NextResponse.redirect(
+      new URL(UrlUtil.buildAdminLoginPath(), request.url)
+    );
   }
 
-  // If it's not a public route and user is not authenticated, redirect to login
-  if (!isPublicRoute && (!token || !isValidJWT(token))) {
-    const redirectUrl = new URL('/admin/login', request.url);
-    // Add the original URL as a callback parameter
-    redirectUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(redirectUrl);
+  if (token && isAuthPage) {
+    return NextResponse.redirect(
+      new URL(UrlUtil.buildAdminDashboardPath(), request.url)
+    );
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

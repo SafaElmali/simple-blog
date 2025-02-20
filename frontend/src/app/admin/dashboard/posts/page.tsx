@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PostList } from "@/app/admin/_components/post-list";
-import { urls } from "@/lib/urls";
+import { UrlUtil } from "@/lib/urls";
 
 const PostsPage = () => {
   return (
@@ -14,7 +14,7 @@ const PostsPage = () => {
             Manage your blog posts
           </p>
         </div>
-        <Link href={urls.admin.dashboard.posts.new}>
+        <Link href={UrlUtil.buildAdminPostsNewPath()}>
           <Button>Create Post</Button>
         </Link>
       </div>

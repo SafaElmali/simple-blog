@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { urls } from "@/lib/urls";
+import { UrlUtil } from "@/lib/urls";
 
 export default function PostNotFound() {
   return (
@@ -10,7 +10,10 @@ export default function PostNotFound() {
         <p className="mt-4 text-muted-foreground">
           The post you are looking for does not exist or has been removed.
         </p>
-        <Link href={urls.admin.dashboard.posts.root} className="mt-8 inline-block">
+        <Link
+          href={UrlUtil.buildAdminPostsPath()}
+          className="mt-8 inline-block"
+        >
           <Button>Return to Posts</Button>
         </Link>
       </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { urls } from "@/lib/urls";
+import { UrlUtil } from "@/lib/urls";
 import { Button } from "@/components/ui/button";
 
 const AdminNotFound = () => {
@@ -9,7 +9,7 @@ const AdminNotFound = () => {
       <p className="text-muted-foreground">
         The page you are looking for does not exist.
       </p>
-      <Link href={urls.admin.dashboard.root}>
+      <Link href={UrlUtil.buildAdminDashboardPath()}>
         <Button variant="outline" className="mt-4">
           Return to Dashboard
         </Button>

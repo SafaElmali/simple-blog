@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { LayoutDashboard, FileText, Wrench } from "lucide-react";
-import { urls } from "@/lib/urls";
+import { UrlUtil } from "@/lib/urls";
 
 import { NavMain } from "@/app/admin/_components/sidebar/nav-main";
 import { NavUser } from "@/app/admin/_components/sidebar/nav-user";
@@ -25,28 +25,28 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: urls.admin.dashboard.root,
+      url: UrlUtil.buildAdminDashboardPath(),
       icon: LayoutDashboard,
     },
     {
       title: "Posts",
-      url: urls.admin.dashboard.posts.root,
+      url: UrlUtil.buildAdminPostsPath(),
       icon: FileText,
       hasSubmenu: true,
       items: [
         {
           title: "All Posts",
-          url: urls.admin.dashboard.posts.root,
+          url: UrlUtil.buildAdminPostsPath(),
         },
         {
           title: "Create Post",
-          url: urls.admin.dashboard.posts.new,
+          url: UrlUtil.buildAdminPostsNewPath(),
         },
       ],
     },
     {
       title: "Settings",
-      url: urls.admin.dashboard.settings,
+      url: UrlUtil.buildAdminSettingsPath(),
       icon: Wrench,
     },
   ],

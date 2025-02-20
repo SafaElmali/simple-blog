@@ -29,6 +29,14 @@ const useGetPostBySlug = (slug?: string) => {
   });
 };
 
+const useGetPostById = (id: string) => {
+  return useQuery({
+    queryKey: postKeys.detail(id),
+    queryFn: () => postsApi.getById(id),
+    enabled: !!id,
+  });
+};
+
 // Mutations
 const useCreatePost = () => {
   const queryClient = useQueryClient();
@@ -112,8 +120,8 @@ const useDeletePost = () => {
 
 export {
   useGetPosts,
-  useGetPost,
   useGetPostBySlug,
+  useGetPostById,
   useCreatePost,
   useUpdatePost,
   useDeletePost,

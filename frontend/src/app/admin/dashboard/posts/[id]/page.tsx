@@ -1,14 +1,16 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { usePostQuery } from "@/queries/posts";
+import { useGetPostById } from "@/queries/posts";
 import { PostEditor } from "@/app/admin/_components/post-editor/post-editor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { notFound } from "next/navigation";
 
 const EditPostPage = () => {
   const params = useParams();
-  const { data: post, isLoading, isError } = usePostQuery(params.id as string);
+  const { data: post, isLoading, isError } = useGetPostById(
+    params.id as string
+  );
 
   if (isError || (!isLoading && !post)) {
     notFound();

@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/table";
 import { Edit, Trash } from "lucide-react";
 import Link from "next/link";
-import { usePostsQuery } from "@/queries/posts";
-import { urls } from "@/lib/urls";
+import { useDeletePost, useGetPosts } from "@/queries/posts";
+import { UrlUtil } from "@/lib/urls";
 import { useToast } from "@/components/ui/use-toast";
 import {
   AlertDialog,
@@ -27,12 +27,13 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export const PostList = () => {
-  const { posts, deletePost } = usePostsQuery();
+  const { data: posts, isLoading, isError } = useGetPosts();
+  const { mutateAsync: deletePost, isPending } = useDeletePost();
   const { toast } = useToast();
 
   const handleDelete = async (id: string) => {
     try {
-      await deletePost.mutateAsync(id);
+      await deletePost(id);
       toast({
         title: "Success",
         description: "Post deleted successfully",
@@ -47,7 +48,7 @@ export const PostList = () => {
     }
   };
 
-  if (posts.isLoading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-10">
         <div className="text-muted-foreground">Loading posts...</div>
@@ -55,7 +56,7 @@ export const PostList = () => {
     );
   }
 
-  if (posts.isError) {
+  if (isError) {
     return (
       <div className="flex items-center justify-center py-10">
         <div className="bg-destructive/15 text-destructive px-4 py-3 rounded-md">
@@ -65,11 +66,11 @@ export const PostList = () => {
     );
   }
 
-  if (!posts.data || posts.data.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
       <div className="text-center py-10">
         <p className="text-xl text-muted-foreground">No posts found.</p>
-        <Link href={urls.admin.dashboard.posts.new}>
+        <Link href={UrlUtil.buildAdminPostsNewPath()}>
           <Button className="mt-4">Create your first post</Button>
         </Link>
       </div>
@@ -87,7 +88,7 @@ export const PostList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {posts.data.map((post) => (
+        {posts.map((post) => (
           <TableRow key={post._id}>
             <TableCell>{post.title}</TableCell>
             <TableCell>
@@ -96,7 +97,7 @@ export const PostList = () => {
             <TableCell>{post.status}</TableCell>
             <TableCell>
               <div className="flex gap-2">
-                <Link href={urls.admin.dashboard.posts.edit(post._id)}>
+                <Link href={UrlUtil.buildAdminPostPath(post._id)}>
                   <Button size="sm" variant="outline">
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -111,18 +112,18 @@ export const PostList = () => {
                     <AlertDialogHeader>
                       <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the post
-                        &ldquo;{post.title}&rdquo;.
+                        This action cannot be undone. This will permanently
+                        delete the post &ldquo;{post.title}&rdquo;.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => handleDelete(post._id)}
-                        disabled={deletePost.isPending}
+                        disabled={isPending}
                         className="bg-destructive hover:bg-destructive/90"
                       >
-                        {deletePost.isPending ? "Deleting..." : "Delete"}
+                        {isPending ? "Deleting..." : "Delete"}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>

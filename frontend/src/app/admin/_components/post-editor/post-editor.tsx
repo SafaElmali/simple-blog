@@ -24,12 +24,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "next/image";
-import { Post } from "@/types/post";
+import { CreatePost, Post } from "@/types/post";
 import { PostFormValues, postFormSchema } from "./schema";
-import { CreatePostData, UpdatePostData } from "@/services/posts";
-import { usePostsQuery } from "@/queries/posts";
-import { urls } from "@/lib/urls";
+import { useCreatePost, useUpdatePost } from "@/queries/posts";
 import { Badge } from "@/components/ui/badge";
+import { UrlUtil } from "@/lib/urls";
 
 type PostEditorProps = {
   post?: Post | null;
@@ -37,7 +36,8 @@ type PostEditorProps = {
 
 const PostEditor: FC<PostEditorProps> = ({ post }) => {
   const router = useRouter();
-  const { createPost, updatePost } = usePostsQuery();
+  const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
+  const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePost();
   const [previewData, setPreviewData] = useState<PostFormValues | null>(null);
   const [newTag, setNewTag] = useState("");
 
@@ -56,22 +56,22 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
 
   const onSubmit = async (data: PostFormValues) => {
     try {
-      const formattedData: CreatePostData = {
+      const formattedData: CreatePost = {
         ...data,
         tags: data.tags,
         status: data.status,
       };
 
       if (post) {
-        await updatePost.mutateAsync({
+        await updatePost({
           id: post._id,
-          data: formattedData as UpdatePostData,
+          data: formattedData,
         });
       } else {
-        await createPost.mutateAsync(formattedData);
+        await createPost(formattedData);
       }
 
-      router.push(urls.admin.dashboard.posts.root);
+      router.push(UrlUtil.buildAdminPostsPath());
       router.refresh();
     } catch (error) {
       console.error("Form submission error:", error);
@@ -104,7 +104,7 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
     }
   };
 
-  const isLoading = createPost.isPending || updatePost.isPending;
+  const isLoading = isCreating || isUpdating;
 
   const handlePreview = (values: PostFormValues) => {
     setPreviewData(values);

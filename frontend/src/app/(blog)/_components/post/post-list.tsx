@@ -1,5 +1,3 @@
-"use client";
-
 import { PostCard } from "@/app/(blog)/_components/post/post-card";
 import { useGetPosts } from "@/queries/posts";
 

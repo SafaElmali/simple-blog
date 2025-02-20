@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { urls } from "@/lib/urls";
+import { UrlUtil } from "@/lib/urls";
 
 const AdminPage = () => {
-  redirect(urls.admin.dashboard.root);
+  redirect(UrlUtil.buildAdminDashboardPath());
 };
 
 export default AdminPage;
