@@ -1,21 +1,23 @@
-"use client";
-
-import * as React from "react";
-import { LayoutDashboard, FileText, Wrench } from "lucide-react";
-import { UrlUtil } from "@/lib/urls";
-
-import { NavMain } from "@/app/admin/_components/sidebar/nav-main";
-import { NavUser } from "@/app/admin/_components/sidebar/nav-user";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
-  SidebarProvider,
-  SidebarRail,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { FC } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { UrlUtil } from "@/lib/urls";
+import { ChevronRight, FileText, LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 
-// This is sample data.
+// Menu items.
 const data = {
   user: {
     name: "Admin",
@@ -44,29 +46,51 @@ const data = {
         },
       ],
     },
-    {
-      title: "Settings",
-      url: UrlUtil.buildAdminSettingsPath(),
-      icon: Wrench,
-    },
   ],
 };
 
-const AdminSidebar: FC<React.ComponentProps<typeof Sidebar>> = ({
-  ...props
-}) => {
+const AdminSidebar = () => {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon" {...props}>
-        <SidebarContent>
-          <NavMain items={data.navMain} />
-        </SidebarContent>
-        <SidebarFooter>
-          <NavUser user={data.user} />
-        </SidebarFooter>
-        <SidebarRail />
-      </Sidebar>
-    </SidebarProvider>
+    <Sidebar>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {data.navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  {item.hasSubmenu ? (
+                    <Collapsible className="p-2">
+                      <CollapsibleTrigger className="flex w-full items-center">
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                        <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-90" />
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-2">
+                        {item.items?.map((subItem) => (
+                          <SidebarMenuButton key={subItem.title} asChild className="gap-2">
+                            <Link href={subItem.url} className="pl-4">
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url}>
+                        <item.icon className="h-4 w-4" />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  )}
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 };
 

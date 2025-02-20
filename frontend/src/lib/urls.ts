@@ -30,7 +30,7 @@ export class UrlUtil {
     return `${ADMIN_DASHBOARD}/posts/${id}`;
   }
 
-  static buildAdminSettingsPath() {
-    return `${ADMIN_DASHBOARD}/settings`;
+  static buildAdminCreatePostPath() {
+    return `${ADMIN_DASHBOARD}/posts/new`;
   }
 }

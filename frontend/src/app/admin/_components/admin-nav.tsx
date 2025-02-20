@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Button } from "@/app/admin/_components/ui/button";
+import { Button } from "@/components/ui/button";
 import { deleteCookie } from "@/lib/cookies";
+import { UrlUtil } from "@/lib/urls";
 
 const navItems = [
-  { href: "/admin", label: "Dashboard" },
-  { href: "/admin/posts", label: "Posts" },
-  { href: "/admin/create", label: "Create Post" },
+  { href: UrlUtil.buildAdminDashboardPath(), label: "Dashboard" },
+  { href: UrlUtil.buildAdminPostsPath(), label: "Posts" },
+  { href: UrlUtil.buildAdminCreatePostPath(), label: "Create Post" },
 ];
 
 const AdminNav = () => {

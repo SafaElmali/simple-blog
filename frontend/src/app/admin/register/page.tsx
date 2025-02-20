@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { RegisterForm } from "@/components/features/forms/register-form";
+import { RegisterForm } from "@/components/features/forms/register-form/register-form";
 
 export const metadata: Metadata = {
   title: "Create Admin Account | Biiheev",

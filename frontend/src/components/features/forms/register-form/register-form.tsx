@@ -16,7 +16,7 @@ import {
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { setCookie } from "@/lib/cookies";
-import { registerSchema, RegisterValues } from "./register-form/schema";
+import { registerSchema, RegisterValues } from "./schema";
 
 type RegisterFormProps = {
   endpoint: string;
