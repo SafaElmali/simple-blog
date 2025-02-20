@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
 
-export interface IPost {
+export type Post = {
   title: string;
   description: string;
   content: string;
@@ -11,7 +11,7 @@ export interface IPost {
   updatedAt: Date;
 }
 
-const postSchema = new Schema<IPost>({
+const postSchema = new Schema<Post>({
   title: { type: String, required: true },
   description: { type: String, required: true },
   content: { type: String, required: true },
@@ -31,4 +31,4 @@ postSchema.pre('save', function(next) {
   next();
 });
 
-export const Post = model<IPost>('Post', postSchema); 
+export const Post = model<Post>('Post', postSchema); 

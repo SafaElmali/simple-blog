@@ -1,10 +1,10 @@
+import { axiosInstance } from "@/lib/axios";
 import { Login, Register } from "@/types/auth";
-import axiosInstance from "@/lib/axios";
 
 const ENDPOINTS = {
   REGISTER: "/api/auth/register",
   LOGIN: "/api/auth/login",
-} as const;
+};
 
 export const authApi = {
   register: async (data: Register) => {

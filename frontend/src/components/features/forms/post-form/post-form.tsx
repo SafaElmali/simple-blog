@@ -13,33 +13,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TiptapEditor } from "@/app/admin/_components/editor/tiptap-editor";
-import { FC, useState } from "react";
-import { Eye, Loader2, X } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import Image from "next/image";
-import { CreatePost, Post } from "@/types/post";
+import { TiptapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
+import { FC, useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { PostFormValues, postFormSchema } from "./schema";
-import { useCreatePost, useUpdatePost } from "@/queries/posts";
-import { Badge } from "@/components/ui/badge";
+import { useCreatePost, useUpdatePost, useGetPostById } from "@/queries/posts";
 import { UrlUtil } from "@/lib/urls";
+import { PostSkeleton } from "@/components/features/forms/post-form/_components/post-skeleton";
+import { buildSlug } from "@/lib/slugify";
+import { PostPreviewDialog } from "@/components/features/post-preview-dialog/post-preview-dialog";
+import { TagInput } from "@/components/features/forms/_components/tag-input/tag-input";
 
-type PostEditorProps = {
-  post?: Post | null;
+type PostFormProps = {
+  postId?: string;
 };
 
-const PostEditor: FC<PostEditorProps> = ({ post }) => {
-  const router = useRouter();
+const PostForm: FC<PostFormProps> = ({ postId }) => {
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
+  const [previewData, setPreviewData] = useState<PostFormValues | null>(null);
+  const { data: post, isLoading: isPostLoading } = useGetPostById(postId);
   const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
   const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePost();
-  const [previewData, setPreviewData] = useState<PostFormValues | null>(null);
-  const [newTag, setNewTag] = useState("");
+  const isLoading = isCreating || isUpdating || isPostLoading;
+  const router = useRouter();
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(postFormSchema),
@@ -54,61 +50,45 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
     },
   });
 
+  useEffect(() => {
+    if (post) {
+      form.reset(post);
+    }
+  }, [post, form]);
+
+  // Watch the title field for changes
+  const title = form.watch("title");
+
+  // Update slug when title changes
+  useEffect(() => {
+    if (!isSlugManuallyEdited && title) {
+      const generatedSlug = buildSlug(title);
+      form.setValue("slug", generatedSlug);
+    }
+  }, [title, form, isSlugManuallyEdited]);
+
   const onSubmit = async (data: PostFormValues) => {
     try {
-      const formattedData: CreatePost = {
-        ...data,
-        tags: data.tags,
-        status: data.status,
-      };
-
       if (post) {
         await updatePost({
           id: post._id,
-          data: formattedData,
+          data,
         });
       } else {
-        await createPost(formattedData);
+        await createPost(data);
       }
 
       router.push(UrlUtil.buildAdminPostsPath());
-      router.refresh();
     } catch (error) {
       console.error("Form submission error:", error);
     }
   };
 
-  const handleAddTag = () => {
-    const trimmedTag = newTag.trim();
-    if (trimmedTag && trimmedTag.length >= 2) {
-      const currentTags = form.getValues("tags") || [];
-      if (currentTags.length < 5 && !currentTags.includes(trimmedTag)) {
-        form.setValue("tags", [...currentTags, trimmedTag]);
-        setNewTag("");
-      }
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    const currentTags = form.getValues("tags");
-    form.setValue(
-      "tags",
-      currentTags.filter((tag) => tag !== tagToRemove)
-    );
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTag();
-    }
-  };
-
-  const isLoading = isCreating || isUpdating;
-
   const handlePreview = (values: PostFormValues) => {
     setPreviewData(values);
   };
+
+  if (isLoading) return <PostSkeleton />;
 
   return (
     <div className="space-y-6">
@@ -135,10 +115,18 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
               <FormItem>
                 <FormLabel>Slug</FormLabel>
                 <FormControl>
-                  <Input placeholder="my-awesome-post" {...field} />
+                  <Input
+                    {...field}
+                    placeholder="my-awesome-post"
+                    onChange={(e) => {
+                      field.onChange(e);
+                      setIsSlugManuallyEdited(true);
+                    }}
+                  />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
-                  The URL-friendly version of the title (e.g., my-awesome-post)
+                  The URL-friendly version of the title (e.g., my-awesome-post).
+                  This is automatically generated but can be edited.
                 </p>
                 <FormMessage />
               </FormItem>
@@ -153,8 +141,8 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="A brief description of your post"
                     {...field}
+                    placeholder="A brief description of your post"
                   />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
@@ -172,11 +160,7 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <TiptapEditor
-                    content={field.value}
-                    onChange={field.onChange}
-                    className="min-h-[500px]"
-                  />
+                  <TiptapEditor {...field} className="min-h-[500px]" />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
                   The main content of your post (minimum 50 characters)
@@ -194,8 +178,8 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
                 <FormLabel>Cover Image URL</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="https://example.com/image.jpg"
                     {...field}
+                    placeholder="https://example.com/image.jpg"
                   />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
@@ -213,28 +197,10 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
               <FormItem>
                 <FormLabel>Tags</FormLabel>
                 <FormControl>
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap gap-2">
-                      {field.value?.map((tag) => (
-                        <Badge key={tag} variant="secondary">
-                          {tag}
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveTag(tag)}
-                            className="ml-1 hover:text-destructive"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                    <Input
-                      placeholder="Add a tag and press Enter"
-                      value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                    />
-                  </div>
+                  <TagInput
+                    tags={field.value || []}
+                    onChange={(newTags) => field.onChange(newTags)}
+                  />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
                   Up to 5 tags (each tag minimum 2 characters)
@@ -256,45 +222,23 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
               )}
             </Button>
 
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => handlePreview(form.getValues())}
-                >
-                  <Eye className="mr-2 h-4 w-4" />
-                  Preview
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>Preview Post</DialogTitle>
-                </DialogHeader>
-                <div className="overflow-y-auto max-h-[calc(80vh-8rem)]">
-                  {previewData && (
-                    <div className="prose prose-stone dark:prose-invert max-w-none">
-                      <h1>{previewData.title}</h1>
-                      <p className="text-muted-foreground">
-                        {previewData.description}
-                      </p>
-                      {previewData.coverImage && (
-                        <Image
-                          src={previewData.coverImage}
-                          alt={previewData.title}
-                          width={800}
-                          height={400}
-                          className="rounded-lg object-cover"
-                        />
-                      )}
-                      <div
-                        dangerouslySetInnerHTML={{ __html: previewData.content }}
-                      />
-                    </div>
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
+            {previewData && (
+              <PostPreviewDialog
+                title={previewData.title}
+                description={previewData.description}
+                coverImage={previewData.coverImage}
+                content={previewData.content}
+                trigger={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handlePreview(form.getValues())}
+                  >
+                    Preview
+                  </Button>
+                }
+              />
+            )}
           </div>
         </form>
       </Form>
@@ -302,4 +246,4 @@ const PostEditor: FC<PostEditorProps> = ({ post }) => {
   );
 };
 
-export { PostEditor };
+export { PostForm };

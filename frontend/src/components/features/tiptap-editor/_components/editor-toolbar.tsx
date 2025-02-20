@@ -18,12 +18,13 @@ import {
 } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
+import { FC } from "react";
 
-interface EditorToolbarProps {
+type EditorToolbarProps = {
   editor: Editor | null;
-}
+};
 
-export function EditorToolbar({ editor }: EditorToolbarProps) {
+const EditorToolbar: FC<EditorToolbarProps> = ({ editor }) => {
   if (!editor) {
     return null;
   }
@@ -142,4 +143,6 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
       </Button>
     </div>
   );
-} 
+};
+
+export { EditorToolbar };

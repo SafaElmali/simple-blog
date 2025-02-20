@@ -18,7 +18,9 @@ export const postsApi = {
     }
   },
 
-  getById: async (id: string): Promise<Post> => {
+  getById: async (id?: string): Promise<Post | null> => {
+    if (!id) return null;
+
     try {
       const { data } = await axiosInstance.get<Post>(ENDPOINTS.POST_BY_ID(id));
       return data;

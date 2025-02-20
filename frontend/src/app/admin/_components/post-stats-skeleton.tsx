@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/app/admin/_components/ui/card";
-import { Skeleton } from "@/app/admin/_components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const PostStatsSkeleton = () => {
   return (

@@ -1,8 +1,6 @@
-"use client";
+import { PostForm } from "@/components/features/forms/post-form/post-form";
 
-import { PostEditor } from "@/app/admin/_components/post-editor/post-editor";
-
-export default function NewPostPage() {
+const NewPostPage = () => {
   return (
     <div className="container py-10">
       <div className="mb-8">
@@ -12,8 +10,10 @@ export default function NewPostPage() {
         </p>
       </div>
       <div className="max-w-3xl">
-        <PostEditor />
+        <PostForm />
       </div>
     </div>
   );
-}
+};
+
+export default NewPostPage;

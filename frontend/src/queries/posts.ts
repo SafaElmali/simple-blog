@@ -9,7 +9,7 @@ export const postKeys = {
   lists: () => [...postKeys.all, "list"],
   list: (filters: string) => [...postKeys.lists(), { filters }],
   details: () => [...postKeys.all, "detail"],
-  detail: (id: string) => [...postKeys.details(), id],
+  detail: (id?: string) => [...postKeys.details(), id],
   bySlug: (slug?: string) => [...postKeys.details(), { slug }],
 };
 
@@ -29,7 +29,7 @@ const useGetPostBySlug = (slug?: string) => {
   });
 };
 
-const useGetPostById = (id: string) => {
+const useGetPostById = (id?: string) => {
   return useQuery({
     queryKey: postKeys.detail(id),
     queryFn: () => postsApi.getById(id),

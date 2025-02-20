@@ -1,3 +1,4 @@
+import { slugRegex } from "@/lib/regex";
 import { z } from "zod";
 
 const postFormSchema = z.object({
@@ -11,7 +12,7 @@ const postFormSchema = z.object({
     .min(1, "Slug is required")
     .min(3, "Slug must be at least 3 characters")
     .max(100, "Slug must be less than 100 characters")
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
+    .regex(slugRegex, {
       message: "Slug must contain only lowercase letters, numbers, and hyphens",
     }),
   description: z
