@@ -20,15 +20,4 @@ const postSchema = new Schema<Post>({
   slug: { type: String, required: true, unique: true },
 }, { timestamps: true });
 
-// Create slug from title before saving
-postSchema.pre('save', function(next) {
-  if (this.isModified('title')) {
-    this.slug = this.title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-');
-  }
-  next();
-});
-
 export const Post = model<Post>('Post', postSchema); 
