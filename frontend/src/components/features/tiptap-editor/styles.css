@@ -83,3 +83,44 @@
 .dark .prose th {
   @apply bg-secondary;
 }
+
+.tiptap {
+  @apply prose prose-stone dark:prose-invert w-full max-w-none focus:outline-none min-h-[300px] text-sm leading-relaxed;
+}
+
+.tiptap h1 {
+  @apply text-xl;
+}
+
+.tiptap h2 {
+  @apply text-lg;
+}
+
+.tiptap ul,
+.tiptap ol {
+  @apply pl-5;
+}
+
+.tiptap ul {
+  @apply list-disc;
+}
+
+.tiptap ol {
+  @apply list-decimal;
+}
+
+.tiptap ul > li {
+  @apply list-disc;
+}
+
+.tiptap ol > li {
+  @apply list-decimal;
+}
+
+.tiptap li {
+  @apply ml-4 pl-0;
+}
+
+.tiptap li > p {
+  @apply m-0 inline-block;
+}
