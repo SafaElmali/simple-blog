@@ -3,19 +3,31 @@ import type { NextRequest } from "next/server";
 import { UrlUtil } from "@/lib/urls";
 
 export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   const token = request.cookies.get("token");
-  const isAuthPage = request.nextUrl.pathname === UrlUtil.buildAdminLoginPath();
+  const isAdminRoute = pathname.startsWith("/admin");
+  const isAuthPage = pathname === UrlUtil.buildAdminLoginPath() || 
+                    pathname === UrlUtil.buildAdminRegisterPath();
 
-  if (!token && !isAuthPage) {
-    return NextResponse.redirect(
-      new URL(UrlUtil.buildAdminLoginPath(), request.url)
-    );
-  }
+  // Only check authentication for admin routes
+  if (isAdminRoute) {
+    // Allow access to auth pages without token
+    if (isAuthPage) {
+      // Redirect to dashboard if already authenticated
+      if (token) {
+        return NextResponse.redirect(
+          new URL(UrlUtil.buildAdminDashboardPath(), request.url)
+        );
+      }
+      return NextResponse.next();
+    }
 
-  if (token && isAuthPage) {
-    return NextResponse.redirect(
-      new URL(UrlUtil.buildAdminDashboardPath(), request.url)
-    );
+    // Require authentication for all other admin routes
+    if (!token) {
+      return NextResponse.redirect(
+        new URL(UrlUtil.buildAdminLoginPath(), request.url)
+      );
+    }
   }
 
   return NextResponse.next();
