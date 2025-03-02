@@ -14,7 +14,7 @@ import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Subscript from "@tiptap/extension-subscript";
 import Superscript from "@tiptap/extension-superscript";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { BubbleMenu } from "./plugins/bubble-menu/bubble-menu";
 import { MenuBar } from "./plugins/menu-bar";
 import { LinkDialog } from "./plugins/link-dialog";
@@ -22,7 +22,7 @@ import useLowlight from "@/hooks/use-lowlight";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
-const CHAR_LIMIT = 280;
+const CHAR_LIMIT = 5000;
 
 type TipTapEditorProps = {
   content?: string;
@@ -33,7 +33,7 @@ const TipTapEditor: FC<TipTapEditorProps> = ({ content = "", onChange }) => {
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
   const lowlight = useLowlight();
-  
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -89,6 +89,19 @@ const TipTapEditor: FC<TipTapEditorProps> = ({ content = "", onChange }) => {
     },
   });
 
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content);
+      setCharacterCount(editor.storage.characterCount.characters());
+    }
+  }, [content, editor]);
+
+  useEffect(() => {
+    if (editor) {
+      setCharacterCount(editor.storage.characterCount.characters());
+    }
+  }, [editor]);
+
   const setLink = (url: string) => {
     if (url && editor) {
       editor.chain().focus().setLink({ href: url }).run();
@@ -113,24 +126,28 @@ const TipTapEditor: FC<TipTapEditorProps> = ({ content = "", onChange }) => {
       <EditorContent editor={editor} />
       <div className="flex items-center justify-between px-4 py-2 border-t">
         <div className="flex items-center gap-2">
-          <Progress 
-            value={progress} 
+          <Progress
+            value={progress}
             max={100}
             className={cn(
               "w-16 h-2",
               isOverLimit ? "bg-red-200 dark:bg-red-900" : "bg-secondary",
-              progress >= 80 && !isOverLimit && "bg-yellow-200 dark:bg-yellow-900"
+              progress >= 80 &&
+                !isOverLimit &&
+                "bg-yellow-200 dark:bg-yellow-900"
             )}
             indicatorClassName={cn(
               isOverLimit ? "bg-red-500" : "bg-primary",
               progress >= 80 && !isOverLimit && "bg-yellow-500"
             )}
           />
-          <span className={cn(
-            "text-sm",
-            isOverLimit ? "text-red-500" : "text-muted-foreground",
-            progress >= 80 && !isOverLimit && "text-yellow-500"
-          )}>
+          <span
+            className={cn(
+              "text-sm",
+              isOverLimit ? "text-red-500" : "text-muted-foreground",
+              progress >= 80 && !isOverLimit && "text-yellow-500"
+            )}
+          >
             {characterCount}/{CHAR_LIMIT}
           </span>
         </div>

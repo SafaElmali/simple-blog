@@ -162,7 +162,7 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <TipTapEditor {...field} />
+                  <TipTapEditor {...field} content={field.value} />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
                   The main content of your post (minimum 50 characters)
