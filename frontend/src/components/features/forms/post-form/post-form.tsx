@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { TiptapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
 import { FC, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { PostFormValues, postFormSchema } from "./schema";
@@ -25,6 +24,7 @@ import { PostSkeleton } from "@/components/features/forms/post-form/_components/
 import { buildSlug } from "@/lib/slugify";
 import { PostPreviewDialog } from "@/components/features/post-preview-dialog/post-preview-dialog";
 import { TagInput } from "@/components/features/forms/_components/tag-input/tag-input";
+import { TipTapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
 
 type PostFormProps = {
   postId?: string;
@@ -162,7 +162,7 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <TiptapEditor {...field} className="min-h-[500px]" />
+                  <TipTapEditor {...field} />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
                   The main content of your post (minimum 50 characters)
