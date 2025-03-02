@@ -11,8 +11,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { TiptapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
 import { FC, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -206,6 +208,29 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
                   Up to 5 tags (each tag minimum 2 characters)
                 </p>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="status"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Published</FormLabel>
+                  <FormDescription>
+                    Switch to publish or unpublish your post
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value === "published"}
+                    onCheckedChange={(checked: boolean) =>
+                      field.onChange(checked ? "published" : "draft")
+                    }
+                  />
+                </FormControl>
               </FormItem>
             )}
           />

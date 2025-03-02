@@ -15,10 +15,14 @@ export const postKeys = {
 
 // Queries
 const useGetPosts = () => {
-  return useQuery({
+  const { data, isLoading, error,isError } = useQuery({
     queryKey: postKeys.lists(),
     queryFn: () => postsApi.getAll(),
   });
+
+  const activePosts = data?.filter((post) => post.status === "published");
+
+  return { data, isLoading, error, activePosts, isError };
 };
 
 const useGetPostBySlug = (slug?: string) => {

@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+export type PostStatus = 'draft' | 'published';
+
 export type Post = {
   title: string;
   description: string;
@@ -8,6 +10,7 @@ export type Post = {
   tags: string[];
   slug: string;
   views: number;
+  status: PostStatus;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,6 +23,12 @@ const postSchema = new Schema<Post>({
   tags: [{ type: String }],
   slug: { type: String, required: true, unique: true },
   views: { type: Number, default: 0 },
+  status: { 
+    type: String, 
+    enum: ['draft', 'published'], 
+    default: 'draft',
+    required: true 
+  },
 }, { timestamps: true });
 
 export const Post = model<Post>('Post', postSchema); 

@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 
 export const PostList = () => {
   const { data: posts, isLoading, isError } = useGetPosts();
@@ -88,50 +89,57 @@ export const PostList = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {posts.map((post) => (
-          <TableRow key={post._id}>
-            <TableCell>{post.title}</TableCell>
-            <TableCell>
-              {new Date(post.createdAt).toLocaleDateString()}
-            </TableCell>
-            <TableCell>{post.status}</TableCell>
-            <TableCell>
-              <div className="flex gap-2">
-                <Link href={UrlUtil.buildAdminPostPath(post._id)}>
-                  <Button size="sm" variant="outline">
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
+        {posts.map((post) => {
+          const status = post.status === "published" ? "success" : "warning";
+          const statusText =
+            post.status === "published" ? "Published" : "Draft";
+          return (
+            <TableRow key={post._id}>
+              <TableCell>{post.title}</TableCell>
+              <TableCell>
+                {new Date(post.createdAt).toLocaleDateString()}
+              </TableCell>
+              <TableCell>
+                <Badge variant={status}>{statusText}</Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Link href={UrlUtil.buildAdminPostPath(post._id)}>
                     <Button size="sm" variant="outline">
-                      <Trash className="h-4 w-4" />
+                      <Edit className="h-4 w-4" />
                     </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete the post &ldquo;{post.title}&rdquo;.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => handleDelete(post._id)}
-                        disabled={isPending}
-                        className="bg-destructive hover:bg-destructive/90"
-                      >
-                        {isPending ? "Deleting..." : "Delete"}
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+                  </Link>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button size="sm" variant="outline">
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete the post &ldquo;{post.title}&rdquo;.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => handleDelete(post._id)}
+                          disabled={isPending}
+                          className="bg-destructive hover:bg-destructive/90"
+                        >
+                          {isPending ? "Deleting..." : "Delete"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
