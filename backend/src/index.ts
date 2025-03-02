@@ -6,6 +6,7 @@ import multer from 'multer';
 import path from 'path';
 import authRoutes from './routes/auth.routes';
 import postRoutes from './routes/post.routes';
+import dashboardRoutes from './routes/dashboard.routes';
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // File upload endpoint
 app.post('/api/upload', upload.single('image'), (req, res): void => {
