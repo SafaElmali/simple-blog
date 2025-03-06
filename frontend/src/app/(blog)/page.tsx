@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { PostList } from "@/app/(blog)/_components/post/post-list";
-import { PostListSkeleton } from "@/app/(blog)/_components/post/post-list-skeleton";
+import { PostList } from "@/app/(blog)/_components/post-list";
+import { PostListSkeleton } from "@/app/(blog)/_components/post-list-skeleton";
 
 const HomePage = () => {
   return (

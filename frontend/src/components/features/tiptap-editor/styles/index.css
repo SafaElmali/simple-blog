@@ -1,0 +1,32 @@
+@import "./partial/list.css";
+@import "./partial/typography.css";
+@import "./partial/blocks.css";
+
+.ProseMirror {
+  @apply caret-black dark:caret-white outline-0 p-4 z-0 mx-auto;
+
+  .selection {
+    @apply inline;
+  }
+
+  .selection,
+  *::selection {
+    @apply bg-black/10 dark:bg-white/20 inline;
+  }
+
+  & > .react-renderer {
+    @apply my-12 first:mt-0 last:mb-0;
+  }
+
+  &.resize-cursor {
+    @apply cursor-col-resize;
+  }
+
+  .ProseMirror-gapcursor {
+    @apply relative w-full mx-auto;
+
+    &:after {
+      @apply border-t-black/40 dark:border-t-white/40 w-full -top-[1.5em] mx-auto left-0 right-0;
+    }
+  }
+}

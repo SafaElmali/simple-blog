@@ -1,119 +1,134 @@
-"use client";
-
-import { type Editor, BubbleMenu as TiptapBubbleMenu } from "@tiptap/react";
+import { BubbleMenu, type Editor } from "@tiptap/react";
+import { FC } from "react";
 import {
   Bold,
   Italic,
-  Link2,
+  Underline,
   Code,
   Strikethrough,
-  Underline,
-  MoreVertical,
-  Subscript,
-  Superscript,
+  Quote,
+  Image,
+  Eraser,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useState, FC } from "react";
-import { BubbleMenuButton } from "./bubble-menu-button";
-import { ColorPicker } from "./color-picker";
-import { HighlightPicker } from "./highlight-picker";
-import { TextAlignment } from "./text-alignment";
+import { LinkDialog } from "../link/_components/link-menu/link-dialog";
+import { ImageDialog } from "../image/_components/image-dialog";
+import { useState } from "react";
+import { ToggleButton } from "../../_components/toggle-button";
 
-type BubbleMenuProps = {
+type BubbleMenuBarProps = {
   editor: Editor;
-  onLinkClick: (open: boolean) => void;
 };
 
-export const BubbleMenu: FC<BubbleMenuProps> = ({ editor, onLinkClick }) => {
-  const [colorPopoverOpen, setColorPopoverOpen] = useState(false);
-  const [highlightPopoverOpen, setHighlightPopoverOpen] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+export const BubbleMenuBar: FC<BubbleMenuBarProps> = ({ editor }) => {
+  const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
 
   return (
-    <TiptapBubbleMenu
-      editor={editor}
-      tippyOptions={{ duration: 100 }}
-      className="flex overflow-hidden rounded-md border bg-background shadow-md"
-    >
-      <BubbleMenuButton
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        active={editor.isActive("bold")}
-      >
-        <Bold className="h-4 w-4" />
-      </BubbleMenuButton>
-      <BubbleMenuButton
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        active={editor.isActive("italic")}
-      >
-        <Italic className="h-4 w-4" />
-      </BubbleMenuButton>
-      <BubbleMenuButton
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        active={editor.isActive("underline")}
-      >
-        <Underline className="h-4 w-4" />
-      </BubbleMenuButton>
-      <BubbleMenuButton
-        onClick={() => editor.chain().focus().toggleStrike().run()}
-        active={editor.isActive("strike")}
-      >
-        <Strikethrough className="h-4 w-4" />
-      </BubbleMenuButton>
-      <BubbleMenuButton
-        onClick={() => editor.chain().focus().toggleCode().run()}
-        active={editor.isActive("code")}
-      >
-        <Code className="h-4 w-4" />
-      </BubbleMenuButton>
-      <BubbleMenuButton
-        onClick={() => onLinkClick(true)}
-        active={editor.isActive("link")}
-      >
-        <Link2 className="h-4 w-4" />
-      </BubbleMenuButton>
-
-      <ColorPicker
+    <>
+      <BubbleMenu
+        className="flex items-center gap-1 rounded-md border bg-white p-2 shadow-md dark:bg-card"
+        tippyOptions={{
+          duration: 100,
+          placement: "top",
+          offset: [0, 8],
+        }}
         editor={editor}
-        isOpen={colorPopoverOpen}
-        onOpenChange={setColorPopoverOpen}
+        shouldShow={({ state }) => {
+          const { selection } = state;
+          const { empty } = selection;
+
+          // Only show if text is selected and dialog is not open
+          return !empty && !isLinkDialogOpen && !isImageDialogOpen;
+        }}
+      >
+        <ToggleButton
+          icon={<Bold className="h-4 w-4" />}
+          label="Bold"
+          isActive={editor.isActive("bold")}
+          command={() => editor.chain().focus().toggleBold().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Italic className="h-4 w-4" />}
+          label="Italic"
+          isActive={editor.isActive("italic")}
+          command={() => editor.chain().focus().toggleItalic().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Underline className="h-4 w-4" />}
+          label="Underline"
+          isActive={editor.isActive("underline")}
+          command={() => editor.chain().focus().toggleUnderline().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Strikethrough className="h-4 w-4" />}
+          label="StrikeThrough"
+          isActive={editor.isActive("strike")}
+          command={() => editor.chain().focus().toggleStrike().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Code className="h-4 w-4" />}
+          label="Code"
+          isActive={editor.isActive("code")}
+          command={() => editor.chain().focus().toggleCode().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Quote className="h-4 w-4" />}
+          label="Blockquote"
+          isActive={editor.isActive("blockquote")}
+          command={() => editor.chain().focus().toggleBlockquote().run()}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Image className="h-4 w-4" />}
+          label="Image"
+          isActive={false}
+          command={() => setIsImageDialogOpen(true)}
+          disabledTooltip
+        />
+        <ToggleButton
+          icon={<Eraser className="h-4 w-4" />}
+          label="Clear formatting"
+          isActive={false}
+          command={() =>
+            editor.chain().focus().clearNodes().unsetAllMarks().run()
+          }
+          disabledTooltip
+        />
+      </BubbleMenu>
+
+      <LinkDialog
+        isOpen={isLinkDialogOpen}
+        onClose={() => setIsLinkDialogOpen(false)}
+        onSetLink={(url, openInNewTab) => {
+          if (url === "") {
+            editor.chain().focus().extendMarkRange("link").unsetLink().run();
+          } else {
+            editor
+              .chain()
+              .focus()
+              .extendMarkRange("link")
+              .setLink({ href: url, target: openInNewTab ? "_blank" : "" })
+              .run();
+          }
+          setIsLinkDialogOpen(false);
+        }}
+        initialUrl={editor.getAttributes("link").href}
+        initialOpenInNewTab={editor.getAttributes("link").target === "_blank"}
+        isEditing={editor.isActive("link")}
       />
 
-      <HighlightPicker
-        editor={editor}
-        isOpen={highlightPopoverOpen}
-        onOpenChange={setHighlightPopoverOpen}
+      <ImageDialog
+        isOpen={isImageDialogOpen}
+        onClose={() => setIsImageDialogOpen(false)}
+        onUploadComplete={(url) => {
+          editor.chain().focus().setImage({ src: url }).run();
+        }}
       />
-
-      <Popover open={moreMenuOpen} onOpenChange={setMoreMenuOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-1" align="start">
-          <div className="flex gap-1">
-            <BubbleMenuButton
-              onClick={() => editor.chain().focus().toggleSubscript().run()}
-              active={editor.isActive("subscript")}
-            >
-              <Subscript className="h-4 w-4" />
-            </BubbleMenuButton>
-            <BubbleMenuButton
-              onClick={() => editor.chain().focus().toggleSuperscript().run()}
-              active={editor.isActive("superscript")}
-            >
-              <Superscript className="h-4 w-4" />
-            </BubbleMenuButton>
-            <div className="w-px h-full bg-border mx-1" />
-            <TextAlignment editor={editor} />
-          </div>
-        </PopoverContent>
-      </Popover>
-    </TiptapBubbleMenu>
+    </>
   );
-}; 
+};

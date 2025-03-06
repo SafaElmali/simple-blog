@@ -1,4 +1,4 @@
-import { AdminSidebar } from "@/app/admin/_components/sidebar/admin-sidebar";
+import { AdminSidebar } from "@/app/admin/_layouts/sidebar/admin-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { FC, PropsWithChildren } from "react";
 

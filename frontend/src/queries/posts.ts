@@ -14,7 +14,7 @@ export const postKeys = {
 };
 
 // Queries
-const useGetPosts = () => {
+const useGetPostsQuery = () => {
   const { data, isLoading, error,isError } = useQuery({
     queryKey: postKeys.lists(),
     queryFn: () => postsApi.getAll(),
@@ -25,7 +25,7 @@ const useGetPosts = () => {
   return { data, isLoading, error, activePosts, isError };
 };
 
-const useGetPostBySlug = (slug?: string) => {
+const useGetPostBySlugQuery = (slug?: string) => {
   return useQuery({
     queryKey: postKeys.bySlug(slug),
     queryFn: () => postsApi.getBySlug(slug),
@@ -33,7 +33,7 @@ const useGetPostBySlug = (slug?: string) => {
   });
 };
 
-const useGetPostById = (id?: string) => {
+const useGetPostByIdQuery = (id?: string) => {
   return useQuery({
     queryKey: postKeys.detail(id),
     queryFn: () => postsApi.getById(id),
@@ -42,7 +42,7 @@ const useGetPostById = (id?: string) => {
 };
 
 // Mutations
-const useCreatePost = () => {
+const useCreatePostMutation = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -68,7 +68,7 @@ const useCreatePost = () => {
   });
 };
 
-const useUpdatePost = () => {
+const useUpdatePostMutation = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -96,7 +96,7 @@ const useUpdatePost = () => {
   });
 };
 
-const useDeletePost = () => {
+const useDeletePostMutation = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -123,10 +123,10 @@ const useDeletePost = () => {
 };
 
 export {
-  useGetPosts,
-  useGetPostBySlug,
-  useGetPostById,
-  useCreatePost,
-  useUpdatePost,
-  useDeletePost,
+  useGetPostsQuery,
+  useGetPostBySlugQuery,
+  useGetPostByIdQuery,
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useDeletePostMutation,
 };

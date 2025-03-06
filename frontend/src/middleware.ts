@@ -6,8 +6,9 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("token");
   const isAdminRoute = pathname.startsWith("/admin");
-  const isAuthPage = pathname === UrlUtil.buildAdminLoginPath() || 
-                    pathname === UrlUtil.buildAdminRegisterPath();
+  const isAuthPage =
+    pathname === UrlUtil.buildAdminLoginPath() ||
+    pathname === UrlUtil.buildAdminRegisterPath();
 
   // Only check authentication for admin routes
   if (isAdminRoute) {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PostList } from "@/app/admin/_components/post-list";
+import { PostList } from "@/app/admin/dashboard/posts/_components/post-list";
 import { UrlUtil } from "@/lib/urls";
 
 const PostsPage = () => {

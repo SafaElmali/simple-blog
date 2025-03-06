@@ -18,13 +18,17 @@ import { Switch } from "@/components/ui/switch";
 import { FC, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { PostFormValues, postFormSchema } from "./schema";
-import { useCreatePost, useUpdatePost, useGetPostById } from "@/queries/posts";
+import {
+  useCreatePostMutation,
+  useUpdatePostMutation,
+  useGetPostByIdQuery,
+} from "@/queries/posts";
 import { UrlUtil } from "@/lib/urls";
 import { PostSkeleton } from "@/components/features/forms/post-form/_components/post-skeleton";
 import { buildSlug } from "@/lib/slugify";
 import { PostPreviewDialog } from "@/components/features/post-preview-dialog/post-preview-dialog";
 import { TagInput } from "@/components/features/forms/_components/tag-input/tag-input";
-import { TipTapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
+import { TiptapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
 
 type PostFormProps = {
   postId?: string;
@@ -33,10 +37,14 @@ type PostFormProps = {
 const PostForm: FC<PostFormProps> = ({ postId }) => {
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [previewData, setPreviewData] = useState<PostFormValues | null>(null);
-  const { data: post, isLoading: isPostLoading } = useGetPostById(postId);
-  const { mutateAsync: createPost, isPending: isCreating } = useCreatePost();
-  const { mutateAsync: updatePost, isPending: isUpdating } = useUpdatePost();
+  const { data: post, isLoading: isPostLoading } = useGetPostByIdQuery(postId);
+  const { mutateAsync: createPost, isPending: isCreating } =
+    useCreatePostMutation();
+  const { mutateAsync: updatePost, isPending: isUpdating } =
+    useUpdatePostMutation();
   const isLoading = isCreating || isUpdating || isPostLoading;
+  const buttonText = postId ? "Update" : "Create";
+  const buttonLoadingText = postId ? "Updating..." : "Creating...";
   const router = useRouter();
 
   const form = useForm<PostFormValues>({
@@ -58,7 +66,6 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
     }
   }, [post, form]);
 
-  // Watch the title field for changes
   const title = form.watch("title");
 
   // Update slug when title changes
@@ -162,7 +169,7 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
               <FormItem>
                 <FormLabel>Content</FormLabel>
                 <FormControl>
-                  <TipTapEditor {...field} content={field.value} />
+                  <TiptapEditor content={field.value} {...field} hideOutput />
                 </FormControl>
                 <p className="text-sm text-muted-foreground">
                   The main content of your post (minimum 50 characters)
@@ -240,10 +247,10 @@ const PostForm: FC<PostFormProps> = ({ postId }) => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {post ? "Updating..." : "Creating..."}
+                  {buttonLoadingText}
                 </>
               ) : (
-                <>{post ? "Update" : "Create"} Post</>
+                <>{buttonText} Post</>
               )}
             </Button>
 

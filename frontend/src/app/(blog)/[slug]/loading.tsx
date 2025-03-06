@@ -1,4 +1,4 @@
-import { PostSkeleton } from "@/app/(blog)/_components/post/post-skeleton";
+import { PostSkeleton } from "@/app/(blog)/[slug]/_components/post-skeleton";
 
 const PostLoading = () => {
   return <PostSkeleton />;

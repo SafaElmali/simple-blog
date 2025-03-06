@@ -1,0 +1,144 @@
+.ProseMirror {
+  /* Image Block */
+  figure[data-type="imageBlock"] {
+    @apply m-0;
+
+    img {
+      @apply rounded block w-full;
+    }
+  }
+
+  /* Block Quote */
+  figure[data-type="blockquoteFigure"] {
+    @apply my-14 text-black dark:text-white;
+  }
+
+  & > blockquote,
+  [data-type="blockquoteFigure"] {
+    blockquote {
+      @apply m-0;
+
+      & > * {
+        @apply first:mt-0 last:mb-0;
+      }
+    }
+  }
+
+  /* Columns */
+  [data-type="columns"] {
+    @apply grid gap-4 mt-14 mb-12;
+
+    &.layout-sidebar-left {
+      grid-template-columns: 40fr 60fr;
+    }
+
+    &.layout-sidebar-right {
+      grid-template-columns: 60fr 40fr;
+    }
+
+    &.layout-two-column {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  [data-type="column"] {
+    @apply overflow-auto;
+  }
+
+  /* Details */
+  [data-type="details"] {
+    @apply flex gap-1 my-6 mx-auto p-2 border border-gray-300 rounded;
+
+    summary {
+      @apply font-bold block;
+    }
+
+    > button {
+      @apply bg-transparent border-none cursor-pointer flex items-center justify-center rounded text-xs h-5 w-5;
+
+      &:hover {
+        @apply dark:bg-gray-800 bg-gray-300;
+      }
+
+      &::before {
+        content: "\25B6";
+      }
+    }
+
+    &.is-open > button::before {
+      @apply rotate-90;
+    }
+
+    > div {
+      @apply flex flex-col gap-4 w-full;
+
+      > [data-type="detailsContent"] > :last-child {
+        @apply mb-2;
+      }
+    }
+
+    [data-type="details"] {
+      @apply my-2 mx-0;
+    }
+  }
+
+  blockquote {
+    @apply border-l-4 border-muted pl-4 my-4 italic text-foreground;
+  }
+
+  /* Table styles */
+  .tableWrapper {
+    @apply my-6 overflow-x-auto;
+  }
+
+  table {
+    @apply border-collapse m-0 overflow-hidden table-fixed w-full;
+
+    td,
+    th {
+      @apply border border-border box-border min-w-[1em] p-2 align-top relative;
+
+      > * {
+        @apply mb-0;
+      }
+    }
+
+    th {
+      @apply bg-muted font-bold text-left;
+    }
+
+    .selectedCell:after {
+      @apply bg-accent/50 absolute inset-0 pointer-events-none z-[2];
+      content: "";
+    }
+
+    .column-resize-handle {
+      @apply bg-primary absolute bottom-[-2px] pointer-events-none right-[-2px] top-0 w-1;
+    }
+  }
+
+  &.resize-cursor {
+    @apply cursor-col-resize;
+  }
+
+  /* Task List styles */
+  ul[data-type="taskList"] {
+    @apply list-none p-0;
+
+    li {
+      @apply flex gap-0 items-start;
+
+      > label {
+        @apply cursor-pointer select-none;
+      }
+
+      > div {
+        @apply flex-1 min-w-0;
+      }
+
+      input[type="checkbox"] {
+        @apply cursor-pointer mt-1;
+      }
+    }
+  }
+}

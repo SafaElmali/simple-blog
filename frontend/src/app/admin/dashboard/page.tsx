@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useDashboardStats } from "@/queries/dashboard";
+import { useDashboardStatsQuery } from "@/queries/dashboard";
 
 const DashboardPage = () => {
-  const { data: stats, isLoading } = useDashboardStats();
+  const { data: stats, isLoading } = useDashboardStatsQuery();
 
   if (isLoading) {
     return (

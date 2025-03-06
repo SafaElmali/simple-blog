@@ -4,7 +4,7 @@ import { FC, use } from "react";
 import { format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetPostBySlug } from "@/queries/posts";
+import { useGetPostBySlugQuery } from "@/queries/posts";
 import Image from "next/image";
 
 type BlogPostPageProps = {
@@ -13,7 +13,7 @@ type BlogPostPageProps = {
 
 const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
   const { slug } = use(params);
-  const { data: post, isLoading, isError } = useGetPostBySlug(slug);
+  const { data: post, isLoading, isError } = useGetPostBySlugQuery(slug);
 
   if (isError || (!isLoading && !post)) {
     notFound();

@@ -1,4 +1,4 @@
-import { LoginForm } from "@/app/admin/_components/auth/login-form";
+import { AuthForm } from "@/components/features/forms/auth-form/auth-form";
 
 const LoginPage = () => {
   return (
@@ -12,7 +12,7 @@ const LoginPage = () => {
             Enter your credentials to access the admin panel
           </p>
         </div>
-        <LoginForm />
+        <AuthForm />
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -14,19 +13,9 @@ import {
 
 const ThemeToggle = () => {
   const { setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-
-  // useEffect only runs on the client, so now we can safely show the UI
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
 
   return (
-    <div className="fixed top-4 right-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon" className="rounded-full">
