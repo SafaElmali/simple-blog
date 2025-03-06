@@ -43,6 +43,7 @@ export const LinkDialog: FC<LinkDialogProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     const formattedUrl = formatUrl(url);
     onSetLink(formattedUrl, openInNewTab);
   };
