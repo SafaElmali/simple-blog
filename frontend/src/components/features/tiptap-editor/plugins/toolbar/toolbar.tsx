@@ -7,8 +7,9 @@ import {
   Underline,
   Undo,
   Minus,
+  Sparkles,
 } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { HeadingDropdown } from "./_components/heading-dropdown";
 import { FormattingDropdown } from "./_components/formatting-dropdown";
 import { ListDropdown } from "./_components/list-dropdown";
@@ -18,12 +19,21 @@ import { ColorDropdown } from "../../_components/color-picker/color-dropdown";
 import { AlignmentDropdown } from "./_components/alignment-dropdown";
 import { LinkButton } from "../link/link";
 import { ToggleButton } from "../../_components/toggle-button";
+import { AIPromptDialog } from "../ai-prompt-dialog";
 
 type ToolbarProps = {
   editor: Editor | null;
 };
 
 const Toolbar: FC<ToolbarProps> = ({ editor }) => {
+  const [showAIDialog, setShowAIDialog] = useState(false);
+
+  const handleGenerateSuccess = (content: string) => {
+    if (editor) {
+      editor.commands.setContent(content);
+    }
+  };
+
   if (!editor) return null;
 
   return (
@@ -82,7 +92,20 @@ const Toolbar: FC<ToolbarProps> = ({ editor }) => {
         <ListDropdown editor={editor} />
         <TaskListDropdown editor={editor} />
         <FormattingDropdown editor={editor} />
+        <div className="flex-1" />
+        <div className="w-px h-6 bg-border" />
+        <ToggleButton
+          icon={<Sparkles className="h-4 w-4 text-purple-500" />}
+          label="Generate AI Content"
+          command={() => setShowAIDialog(true)}
+          isActive={false}
+        />
       </div>
+      <AIPromptDialog
+        open={showAIDialog}
+        onOpenChange={setShowAIDialog}
+        onSubmitSuccess={handleGenerateSuccess}
+      />
     </div>
   );
 };
