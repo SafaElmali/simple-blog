@@ -20,13 +20,11 @@ import { registerSchema, RegisterValues } from "./schema";
 
 type RegisterFormProps = {
   endpoint: string;
-  onSuccess?: (data: RegisterValues) => void;
   redirectUrl?: string;
 };
 
 const RegisterForm: FC<RegisterFormProps> = ({
   endpoint,
-  onSuccess,
   redirectUrl = "/login",
 }) => {
   const [error, setError] = useState<string>("");
@@ -60,10 +58,6 @@ const RegisterForm: FC<RegisterFormProps> = ({
 
       // Store the token in a cookie
       setCookie("token", responseData.token, 7); // 7 days expiry
-
-      if (onSuccess) {
-        onSuccess(responseData);
-      }
 
       // Redirect to specified URL
       window.location.href = redirectUrl;

@@ -21,9 +21,6 @@ const AdminRegisterPage = () => {
         <RegisterForm
           endpoint="/api/auth/admin/register"
           redirectUrl="/admin/dashboard"
-          onSuccess={(data) => {
-            console.log("Admin created successfully:", data);
-          }}
         />
       </div>
     </div>
