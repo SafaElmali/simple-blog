@@ -89,7 +89,7 @@ The application is deployed using:
 
 #### Frontend Structure
 
-- **`app/`**: Next.js 14 app router pages and layouts
+- **`app/`**: Next.js 15 app router pages and layouts
   - `(auth)/`: Authentication routes (login/register)
   - `(blog)/`: Public blog routes
   - `admin/`: Protected admin dashboard routes
