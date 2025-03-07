@@ -7,6 +7,7 @@ export type DashboardStats = {
     createdAt: string;
   }>;
   popularPosts: Array<{
+    _id: string;
     title: string;
     views: number;
     slug: string;

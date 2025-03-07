@@ -8,9 +8,52 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useDashboardStatsQuery } from "@/queries/dashboard";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { useTheme } from "next-themes";
+
+// Generate last 7 days of sample data if viewsOverTime is empty
+const generateSampleData = () => {
+  const data = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    data.push({
+      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      views: Math.floor(Math.random() * 20) + 1 // Random number between 1-20
+    });
+  }
+  return data;
+};
 
 const DashboardPage = () => {
   const { data: stats, isLoading } = useDashboardStatsQuery();
+  const { theme } = useTheme();
+
+  // Use sample data if viewsOverTime is empty
+  const chartData = stats?.viewsOverTime?.length 
+    ? stats.viewsOverTime.map((item) => ({
+        date: new Date(item.createdAt).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        }),
+        views: item.views
+      }))
+    : generateSampleData();
+
+  // Define chart colors based on theme
+  const chartColors = {
+    text: theme === 'dark' ? '#A1A1AA' : '#71717A',
+    line: theme === 'dark' ? '#0EA5E9' : '#0284C7',
+    grid: theme === 'dark' ? '#27272A' : '#E4E4E7',
+  };
 
   if (isLoading) {
     return (
@@ -49,18 +92,65 @@ const DashboardPage = () => {
             <p className="text-3xl font-bold">{stats?.totalViews || 0}</p>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Total Users</CardTitle>
+            <CardDescription>Registered users</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold">{stats?.totalUsers || 0}</p>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Views Over Time</CardTitle>
-            <CardDescription>Post views in the last 30 days</CardDescription>
+            <CardDescription>
+              {stats?.viewsOverTime?.length 
+                ? "Post views in the last 30 days"
+                : "Sample data - No views recorded yet"}
+            </CardDescription>
           </CardHeader>
-          <CardContent className="h-[300px] flex items-center justify-center text-muted-foreground">
-            {stats?.viewsOverTime
-              ? "Chart implementation coming soon"
-              : "No data available"}
+          <CardContent className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={chartData}
+                margin={{
+                  top: 5,
+                  right: 10,
+                  left: 10,
+                  bottom: 5,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
+                <XAxis 
+                  dataKey="date" 
+                  stroke={chartColors.text}
+                  tick={{ fill: chartColors.text }}
+                />
+                <YAxis 
+                  stroke={chartColors.text}
+                  tick={{ fill: chartColors.text }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: theme === 'dark' ? '#27272A' : '#FFFFFF',
+                    border: 'none',
+                    borderRadius: '6px',
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="views"
+                  stroke={chartColors.line}
+                  strokeWidth={2}
+                  dot={false}
+                />
+              </LineChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
@@ -69,18 +159,21 @@ const DashboardPage = () => {
             <CardTitle>Popular Posts</CardTitle>
             <CardDescription>Most viewed posts</CardDescription>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent className="h-[300px] overflow-auto">
             {stats?.popularPosts && stats.popularPosts.length > 0 ? (
               <div className="space-y-4">
                 {stats.popularPosts.map((post) => (
                   <div
-                    key={post.slug}
+                    key={post._id}
                     className="flex items-center justify-between"
                   >
-                    <a href={`/posts/${post.slug}`} className="hover:underline">
+                    <a 
+                      href={`/${post.slug}`} 
+                      className="hover:underline truncate mr-4"
+                    >
                       {post.title}
                     </a>
-                    <span className="text-muted-foreground">
+                    <span className="text-muted-foreground whitespace-nowrap">
                       {post.views} views
                     </span>
                   </div>
