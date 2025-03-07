@@ -2,17 +2,20 @@
 
 import { FC, use } from "react";
 import { format } from "date-fns";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useGetPostBySlugQuery } from "@/queries/posts";
 import Image from "next/image";
 import { PostSkeleton } from "./_components/post-skeleton";
 import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
+  const router = useRouter();
   const { slug } = use(params);
   const { data: post, isLoading, isError } = useGetPostBySlugQuery(slug);
 
@@ -26,6 +29,15 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
 
   return (
     <article className="container max-w-4xl py-10">
+      <Button
+        variant="ghost"
+        className="mb-8 hover:bg-transparent hover:text-primary -ml-2"
+        onClick={() => router.back()}
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back
+      </Button>
+
       <header className="mb-8">
         <h1 className="text-4xl font-bold mb-2">{post!.title}</h1>
         <p className="text-muted-foreground mb-4">{post!.description}</p>

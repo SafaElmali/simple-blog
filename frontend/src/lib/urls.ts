@@ -2,6 +2,14 @@ const ADMIN_ROOT = "/admin";
 const ADMIN_DASHBOARD = `${ADMIN_ROOT}/dashboard`;
 
 export class UrlUtil {
+  static buildSitePath() {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+
+  static buildSitePostPath(slug: string) {
+    return `${this.buildSitePath()}/${slug}`;
+  }
+
   static buildAdminPath() {
     return `${ADMIN_ROOT}`;
   }

@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Trash } from "lucide-react";
+import { Edit, Eye, Trash } from "lucide-react";
 import Link from "next/link";
 import { useDeletePostMutation, useGetPostsQuery } from "@/queries/posts";
 import { UrlUtil } from "@/lib/urls";
@@ -104,6 +104,21 @@ export const PostList = () => {
               </TableCell>
               <TableCell>
                 <div className="flex gap-2">
+                  {post.status === "published" && (
+                    <Link
+                      href={UrlUtil.buildSitePostPath(post.slug)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        title="View published post"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </Link>
+                  )}
                   <Link href={UrlUtil.buildAdminPostPath(post._id)}>
                     <Button size="sm" variant="outline">
                       <Edit className="h-4 w-4" />
