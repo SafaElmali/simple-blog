@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
+import { HtmlViewer } from "../html-viewer/html-viewer";
 
 type PostPreviewDialogProps = {
   title: string;
@@ -56,7 +57,7 @@ const PostPreviewDialog: FC<PostPreviewDialogProps> = ({
                 className="rounded-lg object-cover"
               />
             )}
-            <div dangerouslySetInnerHTML={{ __html: content }} />
+            <HtmlViewer content={content} />
           </div>
         </div>
       </DialogContent>

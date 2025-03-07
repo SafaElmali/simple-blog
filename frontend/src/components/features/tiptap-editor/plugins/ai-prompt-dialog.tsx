@@ -24,6 +24,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 
 const promptSchema = z.object({
   prompt: z.string().min(10, "Prompt must be at least 10 characters"),
@@ -96,8 +97,8 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
         content: data.content,
         timestamp: new Date(),
       };
-      
-      setHistory(prev => [newContent, ...prev]);
+
+      setHistory((prev) => [newContent, ...prev]);
       setPreview({ isPreview: true, content: data.content });
     } catch {
       toast({
@@ -138,17 +139,19 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
 
   const handleSaveEdit = () => {
     if (!editingContent) return;
-    
+
     if (editingContent.id) {
-      setHistory(prev => prev.map(item => 
-        item.id === editingContent.id 
-          ? { ...item, content: editingContent.content }
-          : item
-      ));
+      setHistory((prev) =>
+        prev.map((item) =>
+          item.id === editingContent.id
+            ? { ...item, content: editingContent.content }
+            : item
+        )
+      );
     } else {
-      setPreview(prev => ({ ...prev, content: editingContent.content }));
+      setPreview((prev) => ({ ...prev, content: editingContent.content }));
     }
-    
+
     setEditingContent(null);
   };
 
@@ -176,7 +179,7 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
               History
             </TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="generate" className="flex-1 flex flex-col">
             {!preview.isPreview ? (
               <Form {...form}>
@@ -186,7 +189,9 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                     name="prompt"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>What would you like to write about?</FormLabel>
+                        <FormLabel>
+                          What would you like to write about?
+                        </FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Write an article about React JSX..."
@@ -206,7 +211,7 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                     >
                       Cancel
                     </Button>
-                    <Button 
+                    <Button
                       type="button"
                       variant="default"
                       className="bg-purple-600 hover:bg-purple-700"
@@ -234,7 +239,7 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                   <div className="flex-1 overflow-y-auto border rounded-md">
                     <div className="prose dark:prose-invert max-w-none">
                       <ScrollArea className="h-[60vh] p-4">
-                        <div dangerouslySetInnerHTML={{ __html: preview.content }} />
+                        <HtmlViewer content={preview.content} />
                       </ScrollArea>
                     </div>
                     <div className="flex justify-end gap-2 p-2 border-t">
@@ -253,7 +258,12 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                     <ScrollArea className="flex-1">
                       <Textarea
                         value={editingContent.content}
-                        onChange={(e) => setEditingContent(prev => ({ ...prev!, content: e.target.value }))}
+                        onChange={(e) =>
+                          setEditingContent((prev) => ({
+                            ...prev!,
+                            content: e.target.value,
+                          }))
+                        }
                         className="min-h-[60vh] p-4 border-0 resize-none focus-visible:ring-0"
                       />
                     </ScrollArea>
@@ -278,14 +288,10 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                   </div>
                 )}
                 <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleBack}
-                  >
+                  <Button type="button" variant="outline" onClick={handleBack}>
                     Back
                   </Button>
-                  <Button 
+                  <Button
                     type="button"
                     variant="default"
                     className="bg-purple-600 hover:bg-purple-700"
@@ -298,7 +304,7 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
               </div>
             )}
           </TabsContent>
-          
+
           <TabsContent value="history" className="flex-1 overflow-hidden">
             <div className="h-full overflow-y-auto pr-2">
               {history.length === 0 ? (
@@ -308,7 +314,10 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
               ) : (
                 <div className="space-y-4">
                   {history.map((item) => (
-                    <div key={item.id} className="border rounded-lg p-4 space-y-2">
+                    <div
+                      key={item.id}
+                      className="border rounded-lg p-4 space-y-2"
+                    >
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-medium">{item.prompt}</p>
@@ -329,11 +338,16 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                           {editingContent?.id === item.id ? (
                             <Textarea
                               value={editingContent.content}
-                              onChange={(e) => setEditingContent(prev => ({ ...prev!, content: e.target.value }))}
+                              onChange={(e) =>
+                                setEditingContent((prev) => ({
+                                  ...prev!,
+                                  content: e.target.value,
+                                }))
+                              }
                               className="min-h-[8rem] p-2 border-0 resize-none focus-visible:ring-0"
                             />
                           ) : (
-                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                            <HtmlViewer content={item.content} />
                           )}
                         </div>
                         <div className="flex justify-end gap-2 mt-2">
@@ -361,7 +375,9 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                               type="button"
                               variant="outline"
                               size="sm"
-                              onClick={() => handleStartEdit(item.content, item.id)}
+                              onClick={() =>
+                                handleStartEdit(item.content, item.id)
+                              }
                             >
                               Edit
                             </Button>

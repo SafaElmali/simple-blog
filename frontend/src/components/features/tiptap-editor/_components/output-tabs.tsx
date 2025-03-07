@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 
 type OutputTabsProps = {
   content: string;
@@ -20,10 +21,7 @@ export const OutputTabs: FC<OutputTabsProps> = ({ content }) => {
         </div>
       </TabsContent>
       <TabsContent value="preview" className="mt-2">
-        <div
-          className="prose dark:prose-invert max-w-none rounded-md border bg-card p-4"
-          dangerouslySetInnerHTML={{ __html: content }}
-        />
+        <HtmlViewer content={content} />
       </TabsContent>
     </Tabs>
   );

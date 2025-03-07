@@ -1,0 +1,12 @@
+/* Create this new file for shared code block styles */
+.code-block-styles {
+  @apply bg-muted/50 rounded-md p-4 overflow-x-auto border border-muted;
+}
+
+.code-block-styles code {
+  @apply bg-transparent p-0 text-sm leading-relaxed font-mono block w-full text-inherit;
+}
+
+.inline-code {
+  @apply bg-muted/50 rounded-md px-1.5 py-0.5 text-sm font-mono;
+} 

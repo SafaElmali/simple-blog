@@ -3,9 +3,10 @@
 import { FC, use } from "react";
 import { format } from "date-fns";
 import { notFound } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useGetPostBySlugQuery } from "@/queries/posts";
 import Image from "next/image";
+import { PostSkeleton } from "./_components/post-skeleton";
+import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -20,18 +21,7 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
   }
 
   if (isLoading) {
-    return (
-      <div className="container max-w-4xl py-10">
-        <Skeleton className="h-8 w-3/4 mb-4" />
-        <Skeleton className="h-4 w-1/2 mb-8" />
-        <Skeleton className="aspect-video w-full mb-8" />
-        <div className="space-y-4">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-3/4" />
-        </div>
-      </div>
-    );
+    return <PostSkeleton />;
   }
 
   return (
@@ -71,10 +61,7 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
         </div>
       )}
 
-      <div
-        className="prose prose-stone dark:prose-invert max-w-none"
-        dangerouslySetInnerHTML={{ __html: post!.content }}
-      />
+      <HtmlViewer content={post!.content} />
     </article>
   );
 };
