@@ -32,6 +32,7 @@
     "@tiptap/core": "^2.11.5",
     "@tiptap/extension-bubble-menu": "^2.11.0",
     "@tiptap/extension-character-count": "^2.11.5",
+    "@tiptap/extension-code-block": "^2.11.5",
     "@tiptap/extension-code-block-lowlight": "^2.11.0",
     "@tiptap/extension-color": "^2.11.5",
     "@tiptap/extension-dropcursor": "^2.11.0",

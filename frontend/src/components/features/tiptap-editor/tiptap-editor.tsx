@@ -23,6 +23,7 @@ import Dropcursor from "@tiptap/extension-dropcursor";
 import { LinkMenu } from "./plugins/link/_components/link-menu/link-menu";
 import { OutputTabs } from "./_components/output-tabs";
 import { BubbleMenuBar } from "./plugins/bubble-menu/bubble-menu";
+import CodeBlock from '@tiptap/extension-code-block';
 
 type TiptapEditorProps = {
   className?: string;
@@ -41,7 +42,9 @@ const TiptapEditor: FC<TiptapEditorProps> = ({
 
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        codeBlock: false,
+      }),
       Table,
       TableRow,
       TableHeader,
@@ -77,6 +80,11 @@ const TiptapEditor: FC<TiptapEditorProps> = ({
       Dropcursor.configure({
         color: "var(--primary)",
         width: 2,
+      }),
+      CodeBlock.configure({
+        HTMLAttributes: {
+          class: 'block rounded-md bg-muted/50 p-4 text-sm my-4',
+        },
       }),
     ],
     content,

@@ -61,6 +61,10 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
     content: "",
   });
   const [history, setHistory] = useState<GeneratedContent[]>([]);
+  const [editingContent, setEditingContent] = useState<{
+    id?: string;
+    content: string;
+  } | null>(null);
 
   const form = useForm<PromptFormValues>({
     resolver: zodResolver(promptSchema),
@@ -126,6 +130,26 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
       title: "Content Applied",
       description: "Your article has been generated!",
     });
+  };
+
+  const handleStartEdit = (content: string, id?: string) => {
+    setEditingContent({ id, content });
+  };
+
+  const handleSaveEdit = () => {
+    if (!editingContent) return;
+    
+    if (editingContent.id) {
+      setHistory(prev => prev.map(item => 
+        item.id === editingContent.id 
+          ? { ...item, content: editingContent.content }
+          : item
+      ));
+    } else {
+      setPreview(prev => ({ ...prev, content: editingContent.content }));
+    }
+    
+    setEditingContent(null);
   };
 
   useEffect(() => {
@@ -206,13 +230,53 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
               </Form>
             ) : (
               <div className="flex-1 flex flex-col space-y-4">
-                <div className="flex-1 overflow-y-auto border rounded-md">
-                  <div className="prose dark:prose-invert max-w-none">
-                    <ScrollArea className="h-[60vh] p-4">
-                      <div dangerouslySetInnerHTML={{ __html: preview.content }} />
-                    </ScrollArea>
+                {!editingContent ? (
+                  <div className="flex-1 overflow-y-auto border rounded-md">
+                    <div className="prose dark:prose-invert max-w-none">
+                      <ScrollArea className="h-[60vh] p-4">
+                        <div dangerouslySetInnerHTML={{ __html: preview.content }} />
+                      </ScrollArea>
+                    </div>
+                    <div className="flex justify-end gap-2 p-2 border-t">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStartEdit(preview.content)}
+                      >
+                        Edit
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="flex-1 flex flex-col border rounded-md">
+                    <ScrollArea className="flex-1">
+                      <Textarea
+                        value={editingContent.content}
+                        onChange={(e) => setEditingContent(prev => ({ ...prev!, content: e.target.value }))}
+                        className="min-h-[60vh] p-4 border-0 resize-none focus-visible:ring-0"
+                      />
+                    </ScrollArea>
+                    <div className="flex justify-end gap-2 p-2 border-t">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditingContent(null)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="default"
+                        size="sm"
+                        onClick={handleSaveEdit}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 <div className="flex justify-end gap-2 pt-2">
                   <Button
                     type="button"
@@ -262,7 +326,46 @@ export const AIPromptDialog: FC<AIPromptDialogProps> = ({
                       </div>
                       <div className="max-h-32 overflow-y-auto border rounded p-2 mt-2">
                         <div className="prose dark:prose-invert max-w-none">
-                          <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                          {editingContent?.id === item.id ? (
+                            <Textarea
+                              value={editingContent.content}
+                              onChange={(e) => setEditingContent(prev => ({ ...prev!, content: e.target.value }))}
+                              className="min-h-[8rem] p-2 border-0 resize-none focus-visible:ring-0"
+                            />
+                          ) : (
+                            <div dangerouslySetInnerHTML={{ __html: item.content }} />
+                          )}
+                        </div>
+                        <div className="flex justify-end gap-2 mt-2">
+                          {editingContent?.id === item.id ? (
+                            <>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setEditingContent(null)}
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="default"
+                                size="sm"
+                                onClick={handleSaveEdit}
+                              >
+                                Save
+                              </Button>
+                            </>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStartEdit(item.content, item.id)}
+                            >
+                              Edit
+                            </Button>
+                          )}
                         </div>
                       </div>
                     </div>
