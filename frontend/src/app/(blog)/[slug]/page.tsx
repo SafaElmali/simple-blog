@@ -78,7 +78,7 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
         <HtmlViewer content={post!.content} />
       </article>
       
-      <PostReaction postId={post!._id} />
+      <PostReaction postId={post!._id} title={post!.title} />
     </div>
   );
 };
