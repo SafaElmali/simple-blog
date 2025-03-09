@@ -8,8 +8,9 @@ import Image from "next/image";
 import { PostSkeleton } from "./_components/post-skeleton";
 import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
 import { PostReaction } from "./_components/post-reaction";
+import { calculateReadingTime } from "@/lib/utils";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -27,6 +28,8 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
   if (isLoading) {
     return <PostSkeleton />;
   }
+
+  const readingTime = calculateReadingTime(post!.content);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] pb-24 relative">
@@ -47,6 +50,10 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
             <time dateTime={post!.createdAt}>
               {format(new Date(post!.createdAt), "MMMM d, yyyy")}
             </time>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              <span>{readingTime} min read</span>
+            </div>
             {post!.tags && post!.tags.length > 0 && (
               <div className="flex gap-2">
                 {post!.tags.map((tag) => (
@@ -77,7 +84,7 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
 
         <HtmlViewer content={post!.content} />
       </article>
-      
+
       <PostReaction postId={post!._id} title={post!.title} />
     </div>
   );

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Clock } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,12 +10,20 @@ import {
 } from "@/components/ui/card";
 import { Post } from "@/types/post";
 import { FC } from "react";
+import { calculateReadingTime } from "@/lib/utils";
 
 type PostCardProps = {
   post: Post;
 };
 
 const PostCard: FC<PostCardProps> = ({ post }) => {
+  const createdDate = new Date(post.createdAt);
+  const formattedDate = createdDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <Link href={`${post.slug}`} className="block group">
       <Card className="overflow-hidden transition-all duration-200 hover:border-primary/50 hover:shadow-md">
@@ -43,12 +52,12 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
             {post.description}
           </p>
         </CardContent>
-        <CardFooter className="p-4 pt-0 text-sm text-muted-foreground">
-          {new Date(post.createdAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+        <CardFooter className="p-4 pt-0 text-sm text-muted-foreground flex items-center gap-4">
+          {formattedDate}
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{calculateReadingTime(post.content)} min read</span>
+          </div>
         </CardFooter>
       </Card>
     </Link>
