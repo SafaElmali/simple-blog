@@ -1,4 +1,4 @@
-# Biiheev - Modern Blog Platform
+# Simple Blog
 
 A modern, full-stack blog platform built with Next.js 15, Express, and MongoDB. Features a rich text editor, AI-powered content generation, and a clean, responsive design.
 
@@ -36,7 +36,7 @@ A modern, full-stack blog platform built with Next.js 15, Express, and MongoDB. 
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/biiheev.git
+git clone https://github.com/yourusername/simple-blog.git
 ```
 
 2. Install dependencies:
