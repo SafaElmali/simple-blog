@@ -7,6 +7,7 @@ import path from "path";
 import authRoutes from "./routes/auth.routes";
 import postRoutes from "./routes/post.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
+import reactionRoutes from "./routes/reaction.routes";
 
 dotenv.config();
 
@@ -71,6 +72,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/reactions", reactionRoutes);
 
 // File upload endpoint
 app.post("/api/upload", upload.single("image"), (req, res): void => {
