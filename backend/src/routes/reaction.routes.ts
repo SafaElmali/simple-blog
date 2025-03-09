@@ -4,12 +4,14 @@ import {
   getLikeStatus, 
   resetLikes 
 } from '../controllers/reaction.controller';
-import { auth } from '../middleware/auth';
 
 const router = Router();
 
-router.post('/:postId/increment', auth, incrementLike);
-router.delete('/:postId/reset', auth, resetLikes);
-router.get('/:postId/status', auth, getLikeStatus);
+// Public endpoint - no auth required
+router.get('/:postId/status', getLikeStatus);
+
+// Protected endpoints - require auth
+router.post('/:postId/increment', incrementLike);
+router.delete('/:postId/reset', resetLikes);
 
 export default router; 

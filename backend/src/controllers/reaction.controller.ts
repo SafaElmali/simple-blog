@@ -2,18 +2,29 @@ import { Request, Response } from 'express';
 import { Reaction } from '../models/Reaction';
 import { isValidObjectId } from 'mongoose';
 
+const getClientIp = (req: Request): string => {
+  // Get IP from various possible headers and fallback to remote address
+  const ip = 
+    req.headers['x-forwarded-for'] || 
+    req.headers['x-real-ip'] ||
+    req.socket.remoteAddress ||
+    'unknown';
+    
+  return Array.isArray(ip) ? ip[0] : ip as string;
+};
+
 export const getLikeStatus = async (req: Request, res: Response): Promise<void> => {
   try {
     const { postId } = req.params;
-    const userId = req.user._id;
+    const ipAddress = getClientIp(req);
 
     if (!isValidObjectId(postId)) {
       res.status(400).json({ error: 'Invalid post ID' });
       return;
     }
 
-    // Get user's reaction
-    const userReaction = await Reaction.findOne({ user: userId, post: postId });
+    // Get IP's reaction
+    const reaction = await Reaction.findOne({ ipAddress, post: postId });
     
     // Get total likes
     const totalLikes = await Reaction.countDocuments({ 
@@ -22,9 +33,9 @@ export const getLikeStatus = async (req: Request, res: Response): Promise<void> 
     });
 
     res.json({
-      userLikes: userReaction?.hasLiked ? 1 : 0,
+      userLikes: reaction?.hasLiked ? 1 : 0,
       totalLikes,
-      canLikeMore: !userReaction?.hasLiked
+      canLikeMore: !reaction?.hasLiked
     });
   } catch (error) {
     console.error('Error getting like status:', error);
@@ -35,7 +46,7 @@ export const getLikeStatus = async (req: Request, res: Response): Promise<void> 
 export const incrementLike = async (req: Request, res: Response): Promise<void> => {
   try {
     const { postId } = req.params;
-    const userId = req.user._id;
+    const ipAddress = getClientIp(req);
 
     if (!isValidObjectId(postId)) {
       res.status(400).json({ error: 'Invalid post ID' });
@@ -43,7 +54,7 @@ export const incrementLike = async (req: Request, res: Response): Promise<void> 
     }
 
     // Find or create reaction
-    let reaction = await Reaction.findOne({ user: userId, post: postId });
+    let reaction = await Reaction.findOne({ ipAddress, post: postId });
     
     if (reaction) {
       // Toggle the like
@@ -52,7 +63,7 @@ export const incrementLike = async (req: Request, res: Response): Promise<void> 
     } else {
       // Create new reaction with like
       reaction = await Reaction.create({
-        user: userId,
+        ipAddress,
         post: postId,
         hasLiked: true
       });
