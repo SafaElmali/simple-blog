@@ -2,9 +2,14 @@
 
 import { PostCard } from "@/components/features/post/post-card";
 import { useGetPostsQuery } from "@/queries/posts";
+import { PostListSkeleton } from "./post-list-skeleton";
 
 export const PostList = () => {
-  const { data: activePosts } = useGetPostsQuery();
+  const { data: activePosts, isLoading } = useGetPostsQuery();
+
+  if (isLoading) {
+    return <PostListSkeleton />;
+  }
 
   if (activePosts?.length === 0) {
     return (
