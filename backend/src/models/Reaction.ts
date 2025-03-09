@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 export interface IReaction {
   user: Types.ObjectId;
   post: Types.ObjectId;
-  count: number;
+  hasLiked: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -11,10 +11,12 @@ export interface IReaction {
 const reactionSchema = new Schema<IReaction>({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   post: { type: Schema.Types.ObjectId, ref: 'Post', required: true },
-  count: { type: Number, default: 1, min: 0, max: 16 }, // Maximum 16 likes per user
-}, { timestamps: true });
+  hasLiked: { type: Boolean, default: false },
+}, { 
+  timestamps: true,
+});
 
-// Ensure a user can only have one reaction record per post
+// Ensure a user can only have one reaction per post
 reactionSchema.index({ user: 1, post: 1 }, { unique: true });
 
 export const Reaction = model<IReaction>('Reaction', reactionSchema); 
