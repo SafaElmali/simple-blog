@@ -59,6 +59,7 @@
     "clsx": "^2.1.1",
     "cookies-next": "^5.0.2",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.4.10",
     "highlight.js": "^11.11.1",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.469.0",
