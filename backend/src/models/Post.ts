@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 
-export type PostStatus = 'draft' | 'published';
+export type PostStatus = "draft" | "published";
 
-export type Post = {
+export interface IPost {
   title: string;
   description: string;
   content: string;
@@ -15,20 +15,23 @@ export type Post = {
   updatedAt: Date;
 }
 
-const postSchema = new Schema<Post>({
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  content: { type: String, required: true },
-  coverImage: { type: String, required: true },
-  tags: [{ type: String }],
-  slug: { type: String, required: true, unique: true },
-  views: { type: Number, default: 0 },
-  status: { 
-    type: String, 
-    enum: ['draft', 'published'], 
-    default: 'draft',
-    required: true 
+const postSchema = new Schema<IPost>(
+  {
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    content: { type: String, required: true },
+    coverImage: { type: String, required: true },
+    tags: [{ type: String }],
+    slug: { type: String, required: true, unique: true },
+    views: { type: Number, default: 0 },
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "draft",
+      required: true,
+    },
   },
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-export const Post = model<Post>('Post', postSchema); 
+export const Post = model<IPost>("Post", postSchema);

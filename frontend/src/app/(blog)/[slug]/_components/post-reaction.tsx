@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useIncrementLikeMutation, useGetLikeStatusQuery } from "@/queries/reactions";
 import { useToast } from "@/components/ui/use-toast";
 
-interface PostReactionProps {
+type PostReactionProps = {
   postId: string;
   title: string;
-}
+};
 
 export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
   const { data: likeStatus, isLoading: isStatusLoading } = useGetLikeStatusQuery(postId);
