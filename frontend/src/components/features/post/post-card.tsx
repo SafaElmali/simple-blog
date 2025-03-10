@@ -1,7 +1,4 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,54 +7,32 @@ import {
 } from "@/components/ui/card";
 import { Post } from "@/types/post";
 import { FC } from "react";
-import { calculateReadingTime } from "@/lib/utils";
+import { PostTags } from "./_components/post-tags";
+import { PostCoverImage } from "./_components/post-cover-image";
+import { PostTitle } from "./_components/post-title";
+import { PostDescription } from "./_components/post-description";
+import { PostReadTime } from "./_components/post-read-time";
+import { PostCreatedDate } from "./_components/post-created-date";
 
 type PostCardProps = {
   post: Post;
 };
 
 const PostCard: FC<PostCardProps> = ({ post }) => {
-  const createdDate = new Date(post.createdAt);
-  const formattedDate = createdDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-
   return (
     <Link href={`${post.slug}`} className="block group">
       <Card className="overflow-hidden transition-all duration-200 hover:border-primary/50 hover:shadow-md">
         <CardHeader className="p-0">
-          <div className="relative aspect-video">
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-            />
-          </div>
+          <PostCoverImage coverImage={post.coverImage} title={post.title} />
         </CardHeader>
         <CardContent className="p-4">
-          <div className="flex gap-2 mb-2">
-            {post.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-          <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">
-            {post.title}
-          </h2>
-          <p className="text-muted-foreground mt-2 line-clamp-2 h-12">
-            {post.description}
-          </p>
+          <PostTags tags={post.tags} />
+          <PostTitle title={post.title} />
+          <PostDescription description={post.description} />
         </CardContent>
         <CardFooter className="p-4 pt-0 text-sm text-muted-foreground flex items-center gap-4">
-          {formattedDate}
-          <div className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
-            <span>{calculateReadingTime(post.content)} min read</span>
-          </div>
+          <PostCreatedDate createdAt={post.createdAt} />
+          <PostReadTime content={post.content} />
         </CardFooter>
       </Card>
     </Link>

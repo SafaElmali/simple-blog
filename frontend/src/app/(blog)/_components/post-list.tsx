@@ -4,7 +4,7 @@ import { PostCard } from "@/components/features/post/post-card";
 import { useGetPostsQuery } from "@/queries/posts";
 import { PostListSkeleton } from "./post-list-skeleton";
 
-export const PostList = () => {
+const PostList = () => {
   const { data: activePosts, isLoading } = useGetPostsQuery();
 
   if (isLoading) {
@@ -27,3 +27,5 @@ export const PostList = () => {
     </div>
   );
 };
+
+export { PostList };

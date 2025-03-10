@@ -10,7 +10,7 @@ type PostCardProps = {
   post: Post;
 };
 
-export const PostCard: FC<PostCardProps> = ({ post }) => {
+const PostCard: FC<PostCardProps> = ({ post }) => {
   const readingTime = calculateReadingTime(post.content);
 
   return (
@@ -61,3 +61,5 @@ export const PostCard: FC<PostCardProps> = ({ post }) => {
     </Link>
   );
 };
+
+export { PostCard };
