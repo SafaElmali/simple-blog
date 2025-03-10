@@ -1,12 +1,14 @@
+import { cn } from "@/lib/utils";
 import { FC } from "react";
 
 type PostDescriptionProps = {
   description: string;
+  className?: string;
 };
 
-const PostDescription: FC<PostDescriptionProps> = ({ description }) => {
+const PostDescription: FC<PostDescriptionProps> = ({ description, className }) => {
   return (
-    <p className="text-muted-foreground mt-2 line-clamp-2 h-12">
+    <p className={cn("text-muted-foreground mt-2 line-clamp-2 h-12", className)}>
       {description}
     </p>
   );

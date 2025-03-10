@@ -1,17 +1,20 @@
 "use client";
 
 import { FC, use, useRef } from "react";
-import { format } from "date-fns";
 import { notFound, useRouter } from "next/navigation";
 import { useGetPostBySlugQuery } from "@/queries/posts";
-import Image from "next/image";
 import { PostSkeleton } from "./_components/post-skeleton";
 import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { PostReaction } from "./_components/post-reaction";
-import { calculateReadingTime } from "@/lib/utils";
 import { ReadingProgress } from "@/components/features/reading-progress";
+import { PostTags } from "@/components/features/post/_components/post-tags";
+import { PostReadTime } from "@/components/features/post/_components/post-read-time";
+import { PostCreatedDate } from "@/components/features/post/_components/post-created-date";
+import { PostDescription } from "@/components/features/post/_components/post-description";
+import { PostTitle } from "@/components/features/post/_components/post-title";
+import { PostCoverImage } from "@/components/features/post/_components/post-cover-image";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -31,8 +34,6 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
     return <PostSkeleton />;
   }
 
-  const readingTime = calculateReadingTime(post!.content);
-
   return (
     <>
       <ReadingProgress targetRef={articleRef} />
@@ -48,45 +49,23 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
           </Button>
 
           <header className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">{post!.title}</h1>
-            <p className="text-muted-foreground mb-4">{post!.description}</p>
+            <PostTitle
+              title={post!.title}
+              className="text-4xl font-bold mb-2"
+            />
+            <PostDescription description={post!.description} className="mb-4" />
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <time dateTime={post!.createdAt}>
-                {format(new Date(post!.createdAt), "MMMM d, yyyy")}
-              </time>
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                <span>{readingTime} min read</span>
-              </div>
-              {post!.tags && post!.tags.length > 0 && (
-                <div className="flex gap-2">
-                  {post!.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-secondary px-2 py-1 rounded-md text-secondary-foreground"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <PostCreatedDate createdAt={post!.createdAt} />
+              <PostReadTime content={post!.content} />
+              <PostTags tags={post!.tags} className="m-0" />
             </div>
           </header>
 
-          {post!.coverImage && (
-            <div className="mb-8">
-              <Image
-                src={post!.coverImage}
-                alt={post!.title}
-                width={1200}
-                height={630}
-                className="rounded-lg object-cover"
-                priority
-              />
-            </div>
-          )}
+          <PostCoverImage coverImage={post!.coverImage} title={post!.title} />
 
-          <HtmlViewer content={post!.content} />
+          <div className="mt-8">
+            <HtmlViewer content={post!.content} />
+          </div>
         </article>
 
         <PostReaction postId={post!._id} title={post!.title} />
