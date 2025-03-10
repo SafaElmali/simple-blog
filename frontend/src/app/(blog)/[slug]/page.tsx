@@ -26,12 +26,12 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
   const { data: post, isLoading, isError } = useGetPostBySlugQuery(slug);
   const articleRef = useRef<HTMLDivElement>(null);
 
-  if (isError || (!isLoading && !post)) {
-    notFound();
-  }
-
   if (isLoading) {
     return <PostSkeleton />;
+  }
+
+  if (isError || !post) {
+    notFound();
   }
 
   return (
@@ -49,26 +49,23 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
           </Button>
 
           <header className="mb-8">
-            <PostTitle
-              title={post!.title}
-              className="text-4xl font-bold mb-2"
-            />
-            <PostDescription description={post!.description} className="mb-4" />
+            <PostTitle title={post.title} className="text-4xl font-bold mb-2" />
+            <PostDescription description={post.description} className="mb-4" />
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <PostCreatedDate createdAt={post!.createdAt} />
-              <PostReadTime content={post!.content} />
-              <PostTags tags={post!.tags} className="m-0" />
+              <PostCreatedDate createdAt={post.createdAt} />
+              <PostReadTime content={post.content} />
+              <PostTags tags={post.tags} className="m-0" />
             </div>
           </header>
 
-          <PostCoverImage coverImage={post!.coverImage} title={post!.title} />
+          <PostCoverImage coverImage={post.coverImage} title={post.title} />
 
           <div className="mt-8">
-            <HtmlViewer content={post!.content} />
+            <HtmlViewer content={post.content} />
           </div>
         </article>
 
-        <PostReaction postId={post!._id} title={post!.title} />
+        <PostReaction postId={post._id} title={post.title} />
       </div>
     </>
   );
