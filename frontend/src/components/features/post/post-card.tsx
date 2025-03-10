@@ -48,7 +48,7 @@ const PostCard: FC<PostCardProps> = ({ post }) => {
           <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">
             {post.title}
           </h2>
-          <p className="text-muted-foreground mt-2 line-clamp-2">
+          <p className="text-muted-foreground mt-2 line-clamp-2 h-12">
             {post.description}
           </p>
         </CardContent>
