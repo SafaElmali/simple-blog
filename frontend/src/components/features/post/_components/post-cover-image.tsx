@@ -7,7 +7,7 @@ type PostCoverImageProps = {
 
 const PostCoverImage: FC<PostCoverImageProps> = ({ coverImage, title }) => {
   return (
-    <div className="relative aspect-video">
+    <div className="relative aspect-video rounded-lg overflow-hidden">
       <Image src={coverImage} alt={title} fill className="object-cover" />
     </div>
   );
