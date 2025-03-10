@@ -9,9 +9,7 @@ const NewPostPage = () => {
           Create a new blog post by filling out the form below.
         </p>
       </div>
-      <div className="max-w-3xl">
-        <PostForm />
-      </div>
+      <PostForm />
     </div>
   );
 };
