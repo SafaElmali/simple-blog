@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FC, useState } from "react";
-import { formatUrl } from "@/lib/url";
+import { formatUrl } from "@/lib/urls";
 
 type LinkDialogProps = {
   isOpen: boolean;

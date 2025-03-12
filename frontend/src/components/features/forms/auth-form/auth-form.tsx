@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { setCookie } from "@/lib/cookies";
 import { loginSchema, LoginValues } from "./schema";
 import { useLoginMutation } from "@/queries/auth";
+import { UrlUtil } from "@/lib/urls";
 
 const AuthForm = () => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const AuthForm = () => {
 
       setCookie("token", res.token, 7);
 
-      router.push("/admin");
+      router.push(UrlUtil.buildAdminDashboardPath());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to login");
     } finally {
