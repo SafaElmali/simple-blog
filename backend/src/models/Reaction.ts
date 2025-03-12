@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 export interface IReaction {
   ipAddress: string;
   post: string;
-  hasLiked: boolean;
+  count: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -11,7 +11,7 @@ export interface IReaction {
 const reactionSchema = new Schema<IReaction>({
   ipAddress: { type: String, required: true },
   post: { type: String, required: true },
-  hasLiked: { type: Boolean, default: false },
+  count: { type: Number, default: 0 },
 }, { 
   timestamps: true,
 });

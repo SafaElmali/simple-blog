@@ -1,28 +1,36 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import { Heart, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIncrementLikeMutation, useGetLikeStatusQuery } from "@/queries/reactions";
+import {
+  useReactionMutation,
+  useGetReactionStatusQuery,
+} from "@/queries/reactions";
 import { useToast } from "@/components/ui/use-toast";
 
-type PostReactionProps = {
+type PostActionsProps = {
   postId: string;
   title: string;
 };
 
-export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
-  const { data: likeStatus, isLoading: isStatusLoading } = useGetLikeStatusQuery(postId);
-  const { mutate: incrementLike, isPending } = useIncrementLikeMutation();
+export const PostActions: FC<PostActionsProps> = ({ postId, title }) => {
+  const {
+    data: likeStatus,
+    isLoading: isStatusLoading,
+    refetch,
+  } = useGetReactionStatusQuery(postId);
+  const { mutate: incrementLike, isPending } = useReactionMutation();
   const { toast } = useToast();
 
   const handleLikeClick = () => {
     if (isPending) return;
     incrementLike(postId);
+    refetch();
   };
 
-  const handleShare = useCallback(async () => {
+  const handleShare = async () => {
     const url = window.location.href;
-    
+
     try {
       if (navigator.share) {
         await navigator.share({
@@ -37,7 +45,7 @@ export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
         });
       }
     } catch (error) {
-      if (error instanceof Error && error.name !== "AbortError") {
+      if (error instanceof Error) {
         toast({
           title: "Failed to share",
           description: "Please try copying the URL manually.",
@@ -45,9 +53,9 @@ export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
         });
       }
     }
-  }, [title, toast]);
+  };
 
-  const isLiked = likeStatus?.userLikes === 1;
+  const hasLikes = likeStatus?.userLikes && likeStatus.userLikes > 0;
 
   return (
     <AnimatePresence>
@@ -67,14 +75,13 @@ export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
                   "hover:scale-110 active:scale-95",
                   "focus:outline-none focus:ring-2 focus:ring-primary/20",
                   "disabled:opacity-50 disabled:cursor-not-allowed",
-                  isLiked && "text-red-500"
+                  hasLikes && "text-red-500"
                 )}
                 disabled={isPending}
-                aria-label={isLiked ? "Unlike post" : "Like post"}
               >
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={isLiked ? "liked" : "unliked"}
+                    key={hasLikes ? "liked" : "unliked"}
                     initial={{ scale: 0.5, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.5, opacity: 0 }}
@@ -84,24 +91,26 @@ export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
                       size={28}
                       className={cn(
                         "transition-colors duration-200",
-                        isLiked ? "fill-current" : "fill-none"
+                        hasLikes ? "fill-current" : "fill-none"
                       )}
                     />
                   </motion.div>
                 </AnimatePresence>
               </button>
 
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={likeStatus?.totalLikes}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="min-w-[2ch] text-base font-medium"
-                >
-                  {likeStatus?.totalLikes}
-                </motion.span>
-              </AnimatePresence>
+              <div className="flex flex-col items-center">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={likeStatus?.totalLikes}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="min-w-[2ch] text-base font-medium"
+                  >
+                    {likeStatus?.totalLikes}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
             </div>
 
             <div className="h-8 w-px bg-border" />
@@ -122,4 +131,4 @@ export const PostReaction: FC<PostReactionProps> = ({ postId, title }) => {
       )}
     </AnimatePresence>
   );
-}; 
+};

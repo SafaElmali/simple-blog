@@ -7,7 +7,7 @@ import { PostSkeleton } from "./_components/post-skeleton";
 import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { PostReaction } from "./_components/post-reaction";
+import { PostActions } from "./_components/post-actions";
 import { ReadingProgress } from "@/components/features/reading-progress";
 import { PostTags } from "@/components/features/post/_components/post-tags";
 import { PostReadTime } from "@/components/features/post/_components/post-read-time";
@@ -65,7 +65,7 @@ const BlogPostPage: FC<BlogPostPageProps> = ({ params }) => {
           </div>
         </article>
 
-        <PostReaction postId={post._id} title={post.title} />
+        <PostActions postId={post._id} title={post.title} />
       </div>
     </>
   );

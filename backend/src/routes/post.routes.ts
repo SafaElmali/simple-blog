@@ -11,14 +11,13 @@ import {
 
 const router = Router();
 
-// Define routes - order matters!
 router.get("/", getPosts);
-router.get("/by-slug/:slug", getPostBySlug);  // More specific route first
-router.get("/:id", getPostById);              // Dynamic route after
+router.get("/by-slug/:slug", getPostBySlug);
+router.get("/:id", getPostById);
 
 // Admin routes
 router.post("/", adminAuth, createPost);
 router.put("/:id", adminAuth, updatePost);
 router.delete("/:id", adminAuth, deletePost);
 
-export default router; 
+export default router;
