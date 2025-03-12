@@ -1,7 +1,5 @@
 module Api
-  class PostsController < BaseController
-    skip_before_action :authenticate_user!, only: [:index, :show, :show_by_slug]
-    before_action :admin_only!, only: [:create, :update, :destroy]
+  class PostsController < ApplicationController
     before_action :set_post, only: [:show, :update, :destroy]
     
     # GET /api/posts
