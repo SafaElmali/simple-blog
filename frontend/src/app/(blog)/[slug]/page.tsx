@@ -4,7 +4,7 @@ import { FC, use, useRef } from "react";
 import { notFound, useRouter } from "next/navigation";
 import { useGetPostBySlugQuery } from "@/queries/posts";
 import { PostSkeleton } from "./_components/post-skeleton";
-import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
+import { HtmlViewer } from "@/components/features/html-viewer";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { PostActions } from "./_components/post-actions";

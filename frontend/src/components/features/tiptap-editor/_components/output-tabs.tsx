@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
+import { HtmlViewer } from "@/components/features/html-viewer";
 
 type OutputTabsProps = {
   content: string;

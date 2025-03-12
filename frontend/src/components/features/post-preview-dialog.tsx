@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Eye } from "lucide-react";
 import Image from "next/image";
 import { FC, ReactNode } from "react";
-import { HtmlViewer } from "../html-viewer/html-viewer";
+import { HtmlViewer } from "./html-viewer";
 
 type PostPreviewDialogProps = {
   title: string;

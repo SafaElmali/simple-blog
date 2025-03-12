@@ -26,7 +26,7 @@ import {
 import { UrlUtil } from "@/lib/urls";
 import { PostSkeleton } from "@/components/features/forms/post-form/_components/post-skeleton";
 import { buildSlug } from "@/lib/slugify";
-import { PostPreviewDialog } from "@/components/features/post-preview-dialog/post-preview-dialog";
+import { PostPreviewDialog } from "@/components/features/post-preview-dialog";
 import { TagInput } from "@/components/features/forms/_components/tag-input/tag-input";
 import { TiptapEditor } from "@/components/features/tiptap-editor/tiptap-editor";
 

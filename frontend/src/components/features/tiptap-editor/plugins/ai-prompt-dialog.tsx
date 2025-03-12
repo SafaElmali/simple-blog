@@ -24,7 +24,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { HtmlViewer } from "@/components/features/html-viewer/html-viewer";
+import { HtmlViewer } from "@/components/features/html-viewer";
 
 const promptSchema = z.object({
   prompt: z.string().min(10, "Prompt must be at least 10 characters"),
