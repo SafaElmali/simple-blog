@@ -37,16 +37,24 @@ const DashboardPage = () => {
   const { data: stats, isLoading } = useDashboardStatsQuery();
   const { theme } = useTheme();
 
-  // Use sample data if viewsOverTime is empty
-  const chartData = stats?.viewsOverTime?.length 
-    ? stats.viewsOverTime.map((item) => ({
-        date: new Date(item.createdAt).toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric' 
-        }),
-        views: item.views
-      }))
-    : generateSampleData();
+  // Process and prepare chart data
+  const processChartData = () => {
+    // Use sample data if viewsOverTime is empty or has only one item
+    if (!stats?.viewsOverTime || !stats.viewsOverTime.length || stats.viewsOverTime.length <= 1) {
+      return generateSampleData();
+    }
+
+    // Map actual data with proper date formatting
+    return stats.viewsOverTime.map((item) => ({
+      date: new Date(item.createdAt).toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      }),
+      views: item.views
+    }));
+  };
+
+  const chartData = processChartData();
 
   // Define chart colors based on theme
   const chartColors = {
@@ -62,6 +70,9 @@ const DashboardPage = () => {
       </div>
     );
   }
+
+  // Debug log to check chart data structure
+  console.log("Chart data:", chartData);
 
   return (
     <div className="space-y-6">
@@ -109,7 +120,7 @@ const DashboardPage = () => {
           <CardHeader>
             <CardTitle>Views Over Time</CardTitle>
             <CardDescription>
-              {stats?.viewsOverTime?.length 
+              {stats?.viewsOverTime && stats.viewsOverTime.length > 1
                 ? "Post views in the last 30 days"
                 : "Sample data - No views recorded yet"}
             </CardDescription>
@@ -130,6 +141,7 @@ const DashboardPage = () => {
                   dataKey="date" 
                   stroke={chartColors.text}
                   tick={{ fill: chartColors.text }}
+                  allowDuplicatedCategory={false}
                 />
                 <YAxis 
                   stroke={chartColors.text}
@@ -147,7 +159,10 @@ const DashboardPage = () => {
                   dataKey="views"
                   stroke={chartColors.line}
                   strokeWidth={2}
-                  dot={false}
+                  dot={{ r: 4, strokeWidth: 1, fill: chartColors.line }}
+                  activeDot={{ r: 6, strokeWidth: 0, fill: chartColors.line }}
+                  isAnimationActive={true}
+                  connectNulls={true}
                 />
               </LineChart>
             </ResponsiveContainer>
