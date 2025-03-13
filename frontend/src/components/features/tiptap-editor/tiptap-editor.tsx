@@ -21,7 +21,7 @@ import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 import Dropcursor from "@tiptap/extension-dropcursor";
 import { LinkMenu } from "./plugins/link/_components/link-menu/link-menu";
-import { OutputTabs } from "./_components/output-tabs";
+import { OutputTabs } from "./plugins/_components/output-tabs";
 import { BubbleMenuBar } from "./plugins/bubble-menu/bubble-menu";
 import CodeBlock from '@tiptap/extension-code-block';
 

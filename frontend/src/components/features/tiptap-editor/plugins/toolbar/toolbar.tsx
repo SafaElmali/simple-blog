@@ -15,11 +15,11 @@ import { FormattingDropdown } from "./_components/formatting-dropdown";
 import { ListDropdown } from "./_components/list-dropdown";
 import { TableDropdown } from "./_components/table-dropdown";
 import { TaskListDropdown } from "./_components/task-list-dropdown";
-import { ColorDropdown } from "../../_components/color-picker/color-dropdown";
+import { ColorDropdown } from "../_components/color-picker/color-dropdown";
 import { AlignmentDropdown } from "./_components/alignment-dropdown";
 import { LinkButton } from "../link/link";
-import { ToggleButton } from "../../_components/toggle-button";
-import { AIPromptDialog } from "../ai-prompt-dialog";
+import { ToggleButton } from "../_components/toggle-button";
+import { AIPromptDialog } from "../_components/ai-prompt-dialog";
 
 type ToolbarProps = {
   editor: Editor | null;

@@ -13,7 +13,7 @@ import {
 import { LinkDialog } from "../link/_components/link-menu/link-dialog";
 import { ImageDialog } from "../image/_components/image-dialog";
 import { useState } from "react";
-import { ToggleButton } from "../../_components/toggle-button";
+import { ToggleButton } from "../_components/toggle-button";
 
 type BubbleMenuBarProps = {
   editor: Editor;

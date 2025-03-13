@@ -1,7 +1,7 @@
 import { type Editor } from "@tiptap/react";
 import { FC, useState } from "react";
 import { ImageIcon } from "lucide-react";
-import { ToggleButton } from "../../../_components/toggle-button";
+import { ToggleButton } from "../../_components/toggle-button";
 import { ImageDialog } from "../../image/_components/image-dialog";
 
 type ImageButtonProps = {

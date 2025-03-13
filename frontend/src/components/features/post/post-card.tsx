@@ -18,6 +18,8 @@ type PostCardProps = {
   post: Post;
 };
 
+// To-DO: Instead the post, we can only pass the post id or slug and fetch the post data from the server
+
 const PostCard: FC<PostCardProps> = ({ post }) => {
   return (
     <Link href={`${post.slug}`} className="block group">
